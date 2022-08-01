@@ -5,7 +5,7 @@ import request from "./request";
 import { GetFormList,InputForm,CreateForm } from "@/type/form";
 
 // 获取form列表
-export const reqGetFormList = (data:GetFormList) => {
+export const reqGetFormList = (data?:GetFormList) => {
   return request({
     url:'form/list',
     method:'post',

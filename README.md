@@ -1,24 +1,37 @@
 # form-vue3
 
-## Project setup
-```
-npm install
-```
+重温之前在金山训练营的项目,本来想优化一下之前基于vue2写的接口,以及组件啥的,完善一下之前的项目,发现之前写的确实不太好.于是想用刚学的vue3来进行新的重构,顺便完善自己之前写的不好的地方,同时学习新的vue3的知识.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+---
 
-### Compiles and minifies for production
-```
-npm run build
-```
+>食用:
+>
+>* 1下载依赖包
+>
+>```node.js
+>npm install
+>```
+>
+>* 2运行后端(先找到后端根目录) [form-serve](https://github.com/2019VK/form-serve)
+>
+>```
+>nom run serve
+>```
+>
+>* 3运行前端
+>
+>```
+>npm run serve 
+>```
 
-### Lints and fixes files
-```
-npm run lint
-```
+### 0729
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+* 刚开始动手,定义部分数据结构,以及写好相关后台接口(未测试)
+
+### 0730
+
+* vue3写的很痛苦，完成登录注册，以及头像昵称的组件，登入存储本地化，以及表单列表的组件
+
+### 0801
+
+* 0731休息了一天，完成个人中心的界面，以及个人中心所有功能的实现

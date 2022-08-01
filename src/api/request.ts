@@ -1,9 +1,6 @@
 // 引入axios
 import axios from "axios";
 
-// 引入仓库
-// eslint-disable-next-line no-unused-vars
-import store from "@/store";
 
 // 创建axios实例对象request
 // 重新配置request
