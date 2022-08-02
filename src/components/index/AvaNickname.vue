@@ -11,51 +11,46 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted } from "vue";
-import { useStore} from 'vuex'
-import { useRouter } from 'vue-router'
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "AvaNickname",
   setup() {
-    const Store = useStore()
-    const router = useRouter()
-    
-
+    // 引入vuex仓库
+    const Store = useStore();
+    // 引入路由器
+    const router = useRouter();
+    // 计算头像是显示默认的，还是登入的
     const avatar = computed(() => {
-      let ava = Store.state.USER.user.avatar
-      let defaultImg = "./asset/defaultAvatar.png"
-      return ava?ava:defaultImg
-    })
+      let ava = Store.state.USER.user.avatar;
+      let defaultImg = "./asset/defaultAvatar.png";
+      return ava ? ava : defaultImg;
+    });
+    // 计算昵称是显示默认的，还是登入的
     const nickname = computed(() => {
-      let nick = Store.state.USER.user.nickname
-      return nick?nick:"请登录"
-    })
-
-    
+      let nick = Store.state.USER.user.nickname;
+      return nick ? nick : "请登录";
+    });
+    // 当登入了，初始化的时候获取
     onMounted(() => {
-      if(Store.state.USER.isLogin){
-        console.log(Store.state.FORM.pageInfo1);
-        // let {offset,limit,isStar} = Store.state.FORM.pageInfo1
-        Store.dispatch("getUserInfo")
-        Store.dispatch('getFormList',{
-          offset: 0,  //number类型,可选   第几页
-          limit: 8,   //number类型,可选   一页限制显示多少个        
-        })
+      if (Store.state.USER.isLogin) {
+        Store.dispatch("getUserInfo");
       }
-    })
-    
-    function loginPersonalCentre(){
-      if(Store.state.USER.isLogin){
-        router.push('/usercenter')
-      }else{
-        router.push('/login')
+    });
+    // 判断是跳转登录还是个人中心
+    /* 登录了跳转个人中心，没登录跳转登录 */
+    function loginPersonalCentre() {
+      if (Store.state.USER.isLogin) {
+        router.push("/usercenter");
+      } else {
+        router.push("/login");
       }
     }
-
 
     return {
       avatar,
       nickname,
-      loginPersonalCentre
+      loginPersonalCentre,
     };
   },
 });

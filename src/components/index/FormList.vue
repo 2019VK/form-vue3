@@ -1,12 +1,12 @@
  <template>
   <div class="template">
-    <div class="formTitle" v-if="form.title">
+    <div class="formTitle">
       <h3>{{ form.title }}</h3>
     </div>
-    <div class="formTime" v-if="timeFormat">
-      <h3>{{ timeFormat }}</h3>
+    <div class="formTime">
+      <h3>{{ formTime }}</h3>
     </div>
-    <div class="formStatus" v-if="statusComputed">
+    <div class="formStatus">
       <h3>{{ statusComputed }}</h3>
       <span
         :class="{ star: true, starActive: form.isStar }"
@@ -23,46 +23,122 @@
 
 <script lang="ts">
 import { ref, defineComponent, reactive, computed } from "vue";
+import { reqStarForm, reqCancelStarForm } from "@/api/form";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "FormList",
-  props:['operation','form','isStar','param1','param2','saveOffset'],
+  props: ["operation", "form", "isStar", "formInfo", "formStarInfo"],
   setup(props) {
-    // const form = reactive({
-    //   author: "70e614ab-0592-445e-9e6d-797d1c491f56",
-    //   ctime: 1653482089810,
-    //   id: "5a85daff-6e7b-456b-b722-fb522ee2167a",
-    //   isStar: true,
-    //   problems: [
-    //     {
-    //       id: "1983e060-330d-489e-a8d6-1a58835311b5",
-    //       required: false,
-    //       title: "string",
-    //       type: "input",
-    //     },
-    //   ],
-    //   status: 4,
-    //   subTitle: "subTitle",
-    //   title: "金山表单",
-    //   utime: 1653482089810,
-    // });
+    const Store = useStore();
 
     const statusComputed = computed(() => {
-      switch(props.form.status){
-            case 1: return "已删除"
-            case 2: return "草稿"
-            case 3: return "收集中"
-            case 4: return "已结束"
-        }
-        return "error";
-    })
+      switch (props.form.status) {
+        case 1:
+          return "已删除";
+        case 2:
+          return "草稿";
+        case 3:
+          return "收集中";
+        case 4:
+          return "已结束";
+      }
+      return "error";
+    });
 
-    const timeFormat = computed(() => {
-        return new Date(props.form.ctime).toLocaleString().replace(/:\d{1,2}$/,' ');
-    })
+    const formTime = computed(() => {
+      return new Date(props.form.ctime)
+        .toLocaleString()
+        .replace(/:\d{1,2}$/, " ");
+    });
+    // 改变收藏
+    /*
+     * 先判断当前form的收藏状态，如果是收藏，则调用取消收藏，如果是未收藏，调用收藏
+     * 调用服务器改变收藏状态后，要更新界面，
+     * 先判断当前界面是显示所有的还是仅收藏
+     * 显示所有的则传入普通参数
+     * 显示仅收藏，则传入收藏参数
+     */
+    async function changeStar() {
+      let id = props.form.id;
+      if (props.form.isStar) {
+        cancelStarForm(id);
+      } else {
+        starForm(id);
+      }
+      if (props.isStar) {
+        Store.dispatch("getFormList", props.formStarInfo);
+      } else {
+        Store.dispatch("getFormList", props.formInfo);
+      }
+    }
+
+    // 收藏表单
+    async function starForm(id: string) {
+      const res: any = await reqStarForm(id);
+      if (res.stat !== "ok") {
+        alert("收藏表单失败，请稍后重试");
+      }
+    }
+    // 取消收藏
+    async function cancelStarForm(id: string) {
+      const res: any = await reqCancelStarForm(id);
+      if (res.stat !== "ok") {
+        alert("收藏表单失败，请稍后重试");
+      }
+    }
+    // 处理operation操作的函数
+    function bypass(operation: string) {
+      switch (operation) {
+        case "发布":
+          publish();
+          break;
+        case "编辑":
+          editor();
+          break;
+        case "分享":
+          share();
+          break;
+        case "填写":
+          formFill();
+          break;
+        case "查看结果":
+          viewResults();
+          break;
+        case "停止":
+          stop();
+          break;
+        case "删除":
+          deleteForm();
+          break;
+      }
+    }
+    function publish() {
+      console.log("publish");
+    }
+    function editor() {
+      console.log("editor");
+    }
+    function share() {
+      console.log("share");
+    }
+    function formFill() {
+      console.log("formFill");
+    }
+    function viewResults() {
+      console.log("viewResults");
+    }
+    function stop() {
+      console.log("stop");
+    }
+    function deleteForm() {
+      console.log("delete");
+    }
 
     return {
       statusComputed,
-      timeFormat
+      formTime,
+      changeStar,
+      bypass
     };
   },
 });

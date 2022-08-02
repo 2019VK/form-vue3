@@ -2,6 +2,7 @@ import { reqGetInfo } from "@/api/user";
 import { User } from "@/type/user";
 
 export default {
+  namespace:true,
   state: {
     user: {
       account: "", // 账户  String

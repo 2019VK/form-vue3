@@ -21,6 +21,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'usercenter',
     component: () => import('../views/UserCenter/UserCenter.vue')
   },
+  {
+    path: '/createform',
+    name: 'createform',
+    component: () => import('../views/CreateForm/CreateForm.vue')
+  },
 ]
 
 const router = createRouter({

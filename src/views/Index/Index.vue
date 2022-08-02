@@ -1,5 +1,5 @@
 <template>
-<div class="index">
+  <div class="index">
     <!-- 头部logo,昵称,头像 -->
     <header>
       <div class="wrap">
@@ -12,7 +12,7 @@
           <h1 class="logoTitle">金山表单</h1>
         </div>
         <!-- 头像昵称组件 -->
-        <AvaNickname/>
+        <AvaNickname />
       </div>
     </header>
     <main>
@@ -28,6 +28,7 @@
           <div class="tabFormList tabActive">表单列表</div>
         </div>
         <div class="forms">
+          <!-- 右侧仅收藏的按钮 -->
           <div class="filterStar" @click="showStarForm">
             <span :class="{ star: true, starActive: isStar }"></span>
             <span class="statText">仅展示收藏</span>
@@ -54,9 +55,8 @@
               :operation="operation[form.status - 2]"
               :form="form"
               :isStar="isStar"
-              :param1="param1"
-              :param2="param2"
-              :saveOffset="saveOffset"
+              :formInfo="formInfo"
+              :formStarInfo="formStarInfo"
             />
           </div>
           <!-- 右侧下方翻页 -->
@@ -72,47 +72,108 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, readonly,ref } from "vue";
-import FormList from '@/components/index/FormList.vue'
-import AvaNickname from '@/components/index/AvaNickname.vue'
-import { useStore } from 'vuex'
+import { computed, defineComponent, onMounted, reactive, readonly, ref } from "vue";
+import FormList from "@/components/index/FormList.vue";
+import AvaNickname from "@/components/index/AvaNickname.vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "IndexView",
-  components:{
+  components: {
     FormList,
-    AvaNickname
+    AvaNickname,
   },
-  setup(){
-    const Store = useStore()
+  setup() {
+    // 引入store仓库，路由器，
+    const Store = useStore();
+    const router = useRouter();
+    // 定义表单操作常量
     const operation = readonly([
-        ["发布", "编辑", "删除"],
-        ["分享", "填写", "查看结果", "停止", "删除"],
-        ["查看结果", "删除"],
-      ])
-    let isStar = ref(false) // 界面中是否收藏的
-    let param1= reactive( {
-        // 普通时候的页码信息
-        offset: 1, //number类型,可选   第几页
-        limit: 8, //number类型,可选   一页限制显示多少个
-        // isStar: true,  // 是否选择只展示收藏的
-      })
-    let param2 = reactive({
-        // 仅收藏时候的页码信息
-        offset: 1, //number类型,可选   第几页
-        limit: 8, //number类型,可选   一页限制显示多少个
-        isStar: true, // 是否选择只展示收藏的
-      })
+      ["发布", "编辑", "删除"],
+      ["分享", "填写", "查看结果", "停止", "删除"],
+      ["查看结果", "删除"],
+    ]);
+    // 界面中显示仅收藏
+    let isStar = ref(false); 
+    // 读取仓库中的普通请求参数
+    let formInfo = computed(() => {
+      return Store.state.FORM.formInfo;
+    });
+    // 读取仓库中的仅收藏请求参数
+    let formStarInfo = computed(() => {
+      return Store.state.FORM.formStarInfo;
+    });
+    // 读取仓库中getter的总页数
+    let allPage = computed(() => {
+      return Store.getters.allPage;
+    });
+    // 计算当前页数
+    let page = computed(() => {
+      return isStar.value
+        ? formStarInfo.value.offset + 1
+        : formInfo.value.offset + 1;
+    });
+
+    // 跳转新建表单
+    function createForm() {
+      router.push("/createform");
+    }
+    // 显示已收藏form
+    function showStarForm() {
+      isStar.value = !isStar.value;
+      if (isStar.value) {
+        Store.dispatch("getFormList", Store.state.FORM.formStarInfo);
+      } else {
+        Store.dispatch("getFormList", Store.state.FORM.formInfo);
+      }
+    }
+    // 上一页
+    function prePage() {
+      if (page.value > 1) {
+        if (isStar.value) {
+          Store.commit("changeFormStarInfo", -1);
+          Store.dispatch("getFormList", Store.state.FORM.formStarInfo);
+        } else {
+          Store.commit("changeFormInfo", -1);
+          Store.dispatch("getFormList", Store.state.FORM.formInfo);
+        }
+      }
+    }
+    // 下一页
+    function nextPage() {
+      if (page.value < allPage.value) {
+        if (isStar.value) {
+          Store.commit("changeFormStarInfo", 1);
+          Store.dispatch("getFormList", Store.state.FORM.formStarInfo);
+        } else {
+          Store.commit("changeFormInfo", 1);
+          Store.dispatch("getFormList", Store.state.FORM.formInfo);
+        }
+      }
+    }
+
+    // 在页面开始的时候请求表单数据 
+    onMounted(() => {
+      if(Store.state.USER.isLogin){
+        Store.dispatch("getFormList", Store.state.FORM.formInfo);
+      }
+    })
 
     return {
       Store,
       operation,
       isStar,
-      param1,
-      param2
-    }
-  }
-
+      formInfo,
+      formStarInfo,
+      createForm,
+      allPage,
+      page,
+      showStarForm,
+      prePage,
+      nextPage,
+    };
+  },
 });
 </script>
 
