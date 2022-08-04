@@ -64,7 +64,19 @@ export interface FormItem {
   title: string;
   utime: number;
 }
+
 export interface FormList {
   item:FormItem[];
   total:number;
+}
+
+export class createFormData{
+  title: string;
+  subTitle: string;
+  problems: Problem[];
+  constructor(){
+    this.title = ''
+    this.subTitle = ''
+    this.problems = []
+  }
 }

@@ -1,6 +1,6 @@
 import { reqGetFormList } from "@/api/form";
 import { GetFormList } from "@/type/form";
-import { FormList } from "@/type/form";
+import { FormList,CreateForm } from "@/type/form";
 
 export default {
   namespace:true,
@@ -21,6 +21,8 @@ export default {
       limit: 8, //number类型,可选   一页限制显示多少个
       isStar:true
     },
+    // 未创建保存草稿的form
+    draftsForm: {}
   },
   getters: {
     allPage(state:any){
@@ -39,6 +41,10 @@ export default {
     // 修改formInfo
     changeFormStarInfo(state: any,offset:number){
       state.formStarInfo.offset += offset 
+    },
+    // 更新草稿form
+    updateDraftsForm(state:any,form:CreateForm){
+      state.draftsForm = form
     }
   },
   actions: {

@@ -4,7 +4,7 @@ import request from "./request";
 import { Problem } from "@/type/problem";
 
 // 获取基础题目类型
-export const reqGetListType = () => {
+export const reqGetProblemType = () => {
   return request({
     url: "problem/listType",
     method: "get",
@@ -12,7 +12,7 @@ export const reqGetListType = () => {
 };
 
 // 获取基础题目
-export const reqGetListBasic = () => {
+export const reqGetProblemBasic = () => {
   return request({
     url: "problem/listBasic",
     method: "get",
@@ -20,7 +20,7 @@ export const reqGetListBasic = () => {
 };
 
 // 获取收藏的题目
-export const reqGetListStar = () => {
+export const reqGetProblemStar = () => {
   return request({
     url: "problem/listStar",
     method: "post",
