@@ -96,11 +96,11 @@ export default defineComponent({
     ]);
     // 界面中显示仅收藏
     let isStar = ref(false); 
-    // 读取仓库中的普通请求参数
+    // 读取仓库中的普通的请求参数
     let formInfo = computed(() => {
       return Store.state.FORM.formInfo;
     });
-    // 读取仓库中的仅收藏请求参数
+    // 读取仓库中的仅收藏的请求参数
     let formStarInfo = computed(() => {
       return Store.state.FORM.formStarInfo;
     });

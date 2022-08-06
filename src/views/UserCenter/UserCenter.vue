@@ -2,7 +2,7 @@
   <!-- 头部显示栏 -->
   <div class="main-header">
     <div class="header-title">
-      <div class="left-el-header" @click="goIndex">
+      <div class="left-el-header" @click="goBack">
         <img src="./assets/goback.png" />
         <span>个人中心</span>
       </div>
@@ -258,8 +258,8 @@ export default defineComponent({
     const User = reactive(new ChangeUser());
 
     // 返回首页
-    function goIndex() {
-      router.push("/");
+    function goBack() {
+      router.back();
     }
 
     /* 退出部分数据以及函数 */
@@ -392,7 +392,7 @@ export default defineComponent({
       ...toRefs(Store.state.USER),
       ifExitDia,
       ifPwdDia,
-      goIndex,
+      goBack,
       openExitDia,
       closeExitDia,
       exit,

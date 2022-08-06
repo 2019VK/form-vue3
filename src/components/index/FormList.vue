@@ -23,8 +23,17 @@
 
 <script lang="ts">
 import { ref, defineComponent, reactive, computed } from "vue";
-import { reqStarForm, reqCancelStarForm } from "@/api/form";
+import {
+  reqStarForm,
+  reqCancelStarForm,
+  reqStartForm,
+  reqEndForm,
+  reqDeleteForm,
+} from "@/api/form";
 import { useStore } from "vuex";
+// 引入element-plus函数
+import { ElMessage, ElMessageBox } from "element-plus";
+import router from "@/router";
 export default defineComponent({
   name: "FormList",
   props: ["operation", "form", "isStar", "formInfo", "formStarInfo"],
@@ -65,25 +74,21 @@ export default defineComponent({
       } else {
         starForm(id);
       }
-      if (props.isStar) {
-        Store.dispatch("getFormList", props.formStarInfo);
-      } else {
-        Store.dispatch("getFormList", props.formInfo);
-      }
+      updateFormList();
     }
 
     // 收藏表单
     async function starForm(id: string) {
       const res: any = await reqStarForm(id);
       if (res.stat !== "ok") {
-        alert("收藏表单失败，请稍后重试");
+        ElMessage.error("收藏表单失败，请稍后重试");
       }
     }
     // 取消收藏
     async function cancelStarForm(id: string) {
       const res: any = await reqCancelStarForm(id);
       if (res.stat !== "ok") {
-        alert("收藏表单失败，请稍后重试");
+        ElMessage.error("取消收藏表单失败，请稍后重试");
       }
     }
     // 处理operation操作的函数
@@ -112,39 +117,95 @@ export default defineComponent({
           break;
       }
     }
-    function publish() {
-      console.log("publish");
+    // 发布表单的函数  调用接口向服务器发请求，成功则更新页面，失败则提示
+    async function publish() {
+      const res: any = await reqStartForm(props.form.id);
+      if (res.stat !== "ok") {
+        ElMessage.error(`发布失败，${res.response.data.msg}`);
+      } else {
+        ElMessage({
+          message: "发布成功！",
+          type: "success",
+        });
+        updateFormList();
+      }
     }
+    // 编辑？
     function editor() {
       console.log("editor");
     }
+    // 分享，跳转到分享的二维码
     function share() {
-      console.log("share");
+      router.push({
+        path: "/formdetail/share",
+        query: {
+          //路由传的参数 form 在formdetail接收
+          id: props.form.id,
+        },
+      });
     }
+    // 添写表单，跳转到表单填写界面
     function formFill() {
       console.log("formFill");
     }
+    // 查看结果，跳转到查看结果页面
     function viewResults() {
       console.log("viewResults");
+      router.push({
+        path: "/formdetail/analysis",
+        query: {
+          //路由传的参数 form 在formdetail接收
+          id: props.form.id,
+        },
+      });
     }
-    function stop() {
-      console.log("stop");
+    // 停止收集，调用接口向服务器发请求，成功则更新页面，失败则提示
+    async function stop() {
+      const res: any = await reqEndForm(props.form.id);
+      if (res.stat !== "ok") {
+        ElMessage.error(`停止收集失败，${res.response.data.msg}`);
+      } else {
+        ElMessage({
+          message: "停止收集成功！",
+          type: "success",
+        });
+        updateFormList();
+      }
     }
-    function deleteForm() {
-      console.log("delete");
+    // 删除表单，调用接口向服务器发请求，成功则更新页面，失败则提示
+    async function deleteForm() {
+      const res: any = await reqDeleteForm(props.form.id);
+      if (res.stat !== "ok") {
+        ElMessage.error(`删除失败，${res.response.data.msg}`);
+      } else {
+        ElMessage({
+          message: "删除成功！",
+          type: "success",
+        });
+        updateFormList();
+      }
+    }
+
+    // 更新界面数据函数
+    function updateFormList() {
+      if (props.isStar) {
+        Store.dispatch("getFormList", props.formStarInfo);
+      } else {
+        Store.dispatch("getFormList", props.formInfo);
+      }
     }
 
     return {
       statusComputed,
       formTime,
       changeStar,
-      bypass
+      bypass,
     };
   },
 });
 </script>
 
-<style scope>
+<style scoped>
 .template {
   display: flex;
   justify-content: space-around;

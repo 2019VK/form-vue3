@@ -1,5 +1,5 @@
-import { reqGetFormList } from "@/api/form";
-import { GetFormList } from "@/type/form";
+import { reqGetFormList,reqGetForm } from "@/api/form";
+import { GetFormList,FormItem } from "@/type/form";
 import { FormList,CreateForm } from "@/type/form";
 
 export default {
@@ -22,7 +22,9 @@ export default {
       isStar:true
     },
     // 未创建保存草稿的form
-    draftsForm: {}
+    draftsForm: {},
+    // 当前表单
+    form:{}
   },
   getters: {
     allPage(state:any){
@@ -45,7 +47,12 @@ export default {
     // 更新草稿form
     updateDraftsForm(state:any,form:CreateForm){
       state.draftsForm = form
-    }
+    },
+    // 修改vuex的当前表单form
+    form(state: any, form: FormItem) {
+      state.form = form;
+    },
+
   },
   actions: {
     // 获取一页表单
@@ -58,6 +65,15 @@ export default {
         context.commit("formList", res.data);
       }
     },
+    // 获取当前表单
+    async getForm(context: any,id:string) {
+      const res:any = await reqGetForm(id)
+      if (res.stat !== "ok") {
+        alert("获取表单失败");
+      } else {
+        context.commit("form", res.data.item);
+      }
+    }
   },
   modules: {},
 };

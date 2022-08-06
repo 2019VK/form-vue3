@@ -23,7 +23,8 @@ export default defineComponent({
     // 计算头像是显示默认的，还是登入的
     const avatar = computed(() => {
       let ava = Store.state.USER.user.avatar;
-      let defaultImg = "./asset/defaultAvatar.png";
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      let defaultImg = require("./assets/defaultAvatar.png");
       return ava ? ava : defaultImg;
     });
     // 计算昵称是显示默认的，还是登入的

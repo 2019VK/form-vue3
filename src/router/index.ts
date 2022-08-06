@@ -26,6 +26,25 @@ const routes: Array<RouteRecordRaw> = [
     name: 'createform',
     component: () => import('../views/CreateForm/CreateForm.vue')
   },
+  {
+    path: '/formdetail',
+    name: 'formdetail',
+    component: () => import('../views/FormDetail/FormDetail.vue'),
+    children: [
+      {
+        path: 'analysis',
+        component: () => import('../components/formDetail/analysis.vue'),
+      },
+      {
+        path: 'questions',
+        component: () => import('../components/formDetail/question.vue'),
+      },
+      {
+        path: 'share',
+        component: () => import('../components/formDetail/share.vue'),
+      }
+    ]
+  },
 ]
 
 const router = createRouter({

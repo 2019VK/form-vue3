@@ -92,7 +92,7 @@ export const reqStartForm = (id: string) => {
   });
 };
 
-// 开始收集表单
+// 结束收集表单
 export const reqEndForm = (id: string) => {
   return request({
     url: `form/end`,
