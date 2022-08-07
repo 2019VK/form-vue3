@@ -6,21 +6,19 @@
       ><span class="type">[时间题]</span>
     </div>
     <div class="time">
-      <el-time-picker
-      v-model="result"
-      :disabled="isUse"
-      arrow-control
-      value-format="HH:mm:ss" 
-      placeholder="请选择时间"
-    />
+      <a-time-picker
+        v-model:value="result"
+        value-format="HH:mm:ss"
+        :disabled="isUse"
+      />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, } from "vue";
+import { defineComponent, ref } from "vue";
 export default defineComponent({
-  name:'timeQuestion',
-  props: ['index','problem','isUse'],
+  name: "timeQuestion",
+  props: ["index", "problem", "isUse"],
   setup() {
     let result = ref("");
 
@@ -28,8 +26,7 @@ export default defineComponent({
       result,
     };
   },
-  
-})
+});
 </script>
 <style scoped>
 .time-box {
@@ -56,5 +53,6 @@ export default defineComponent({
 .time {
   margin-top: 16px;
   margin-left: 16px;
+  width: 200px;
 }
 </style>

@@ -1,6 +1,7 @@
-import { reqGetFormList,reqGetForm } from "@/api/form";
-import { GetFormList,FormItem } from "@/type/form";
-import { FormList,CreateForm } from "@/type/form";
+import { reqGetFormList,reqGetForm,reqFromResult } from "@/api/form";
+import { GetFormList,FormItem,FormList,CreateForm } from "@/type/form";
+// import { FormList,CreateForm } from "@/type/form";
+import { formResult } from "@/type/result";
 
 export default {
   namespace:true,
@@ -24,7 +25,9 @@ export default {
     // 未创建保存草稿的form
     draftsForm: {},
     // 当前表单
-    form:{}
+    form:{},
+    // formDetail表单详细信息
+    formDetail:{}
   },
   getters: {
     allPage(state:any){
@@ -52,6 +55,10 @@ export default {
     form(state: any, form: FormItem) {
       state.form = form;
     },
+    // 修改vuex的当前表单详情formDetail
+    formDetail(state: any, formDetail: formResult) {
+      state.formDetail = formDetail;
+    },
 
   },
   actions: {
@@ -72,6 +79,16 @@ export default {
         alert("获取表单失败");
       } else {
         context.commit("form", res.data.item);
+      }
+    },
+    // 获取当前表单详细信息
+    async getFormDetail(context: any,id:string) {
+      const res:any = await reqFromResult(id)
+      // console.log(res);
+      if (res.stat !== "ok") {
+        alert("获取表单详情失败");
+      } else {
+        context.commit("formDetail", res.data);
       }
     }
   },

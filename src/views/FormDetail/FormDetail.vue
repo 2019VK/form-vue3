@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="main">
-      <router-view></router-view>
+        <router-view></router-view>
     </div>
   </div>
 </template>
@@ -60,6 +60,7 @@ export default defineComponent({
 
     onMounted(() => {
       Store.dispatch("getForm",route.query.id)
+      Store.dispatch("getFormDetail",route.query.id)
     })
     return {
       form,
@@ -196,8 +197,8 @@ a {
 }
 /* 主体 */
 .main {
-  max-width: 90%;
-  min-width: 650px;
+  max-width: 80%;
+  min-width: 700px;
   margin-right: auto;
   margin-left: auto;
 }

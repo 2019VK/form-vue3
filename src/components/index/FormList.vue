@@ -146,11 +146,16 @@ export default defineComponent({
     }
     // 添写表单，跳转到表单填写界面
     function formFill() {
-      console.log("formFill");
+      router.push({
+        path: "/formfill",
+        query: {
+          //路由传的参数 form 在formdetail接收
+          id: props.form.id,
+        },
+      });
     }
     // 查看结果，跳转到查看结果页面
     function viewResults() {
-      console.log("viewResults");
       router.push({
         path: "/formdetail/analysis",
         query: {

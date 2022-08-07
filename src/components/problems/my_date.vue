@@ -6,27 +6,29 @@
       ><span class="type">[日期题]</span>
     </div>
     <div class="date">
-      <el-date-picker
-        v-model="result"
+      <a-date-picker
+        v-model:value="value"
+        format="YYYY-MM-DD"
         :disabled="isUse"
-        type="date"
-        format="YYYY/MM/DD"
-        value-format="YYYY-MM-DD"
-        placeholder="请选择日期"
+        @change="onChange"
       />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, } from "vue";
+import { Dayjs } from "dayjs";
+import { defineComponent, ref } from "vue";
 export default defineComponent({
   name: "dateQuestion",
-  props: ['index','problem','isUse'],
+  props: ["index", "problem", "isUse"],
   setup() {
-    let result = ref("");
-
+    function onChange(value: Dayjs, dateString: string) {
+      console.log("Selected Time: ", value);
+      console.log("Formatted Selected Time: ", dateString);
+    }
     return {
-      result,
+      value: ref<Dayjs>(),
+      onChange,
     };
   },
 });
@@ -56,5 +58,6 @@ export default defineComponent({
 .date {
   margin-top: 16px;
   margin-left: 16px;
+  width: 200px;
 }
 </style>

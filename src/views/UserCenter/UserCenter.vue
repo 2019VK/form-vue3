@@ -2,14 +2,14 @@
   <!-- 头部显示栏 -->
   <div class="main-header">
     <div class="header-title">
-      <div class="left-el-header" @click="goBack">
+      <div class="left-my-header" @click="goBack">
         <img src="./assets/goback.png" />
         <span>个人中心</span>
       </div>
-      <div class="right-el-header">
+      <div class="right-my-header">
         <button
           type="button"
-          class="el-button el-button-exit"
+          class="my-button my-button-exit"
           @click="openExitDia"
         >
           退出
@@ -56,28 +56,28 @@
         </div>
         <!-- 要修改昵称时的表单 -->
         <div class="nickname-form" v-if="ifNickDia">
-          <div class="el-col-8">
+          <div class="my-col-8">
             <input
               v-model="setInfo.nickname"
               type="text"
               rows="2"
               maxlength="20"
-              class="el-input"
+              class="my-input"
               placeholder="请输入新的昵称"
             />
           </div>
-          <div class="el-col-16">
+          <div class="my-col-16">
             <div class="buttons">
               <button
                 type="button"
-                class="el-button el-button--default"
+                class="my-button my-button--default"
                 @click="closeNickDia"
               >
                 取消
               </button>
               <button
                 type="button"
-                class="el-button el-button--primary"
+                class="my-button my-button--primary"
                 @click="changeNick"
               >
                 确认
@@ -105,22 +105,22 @@
   <!-- 密码修改弹出框 -->
   <div v-if="ifPwdDia">
     <div class="v-modal"></div>
-    <div class="el-dialog-wrapper">
-      <div class="el-dialog">
-        <div class="el-dialog-header">
+    <div class="my-dialog-wrapper">
+      <div class="my-dialog">
+        <div class="my-dialog-header">
           <span>修改密码</span>
-          <button type="button" class="el-dialog-headerbtn">
+          <button type="button" class="my-dialog-headerbtn">
             <span class="iconfont" @click="closePwdDia">&#xe621;</span>
           </button>
         </div>
-        <div class="el-dialog-body">
+        <div class="my-dialog-body">
           <div class="pswMargin">
             <span>旧密码:</span>
             <input
               type="password"
               name="oldPsw"
               placeholder="请输入当前密码"
-              class="el-input"
+              class="my-input"
               v-model="changePwd.oldPwd"
             />
           </div>
@@ -130,7 +130,7 @@
               type="password"
               name="newpsw"
               placeholder="请输入新的密码"
-              class="el-input"
+              class="my-input"
               v-model="changePwd.pwd"
             />
           </div>
@@ -140,23 +140,23 @@
               type="password"
               name="confirmPsw"
               placeholder="请再次输入新的密码"
-              class="el-input"
+              class="my-input"
               v-model="changePwd.confirmPwd"
             />
           </div>
         </div>
-        <div class="el-dialog-footer">
+        <div class="my-dialog-footer">
           <span class="dialog-footer">
             <button
               type="button"
-              class="el-button el-button--default"
+              class="my-button my-button--default"
               @click="closePwdDia"
             >
               <span>取消</span>
             </button>
             <button
               type="button"
-              class="el-button el-button--primary"
+              class="my-button my-button--primary"
               @click="changePassword"
             >
               <span>确定</span>
@@ -169,29 +169,29 @@
   <!-- 退出弹出框 -->
   <div v-if="ifExitDia">
     <div class="v-modal"></div>
-    <div class="el-dialog-wrapper">
-      <div class="el-dialog">
-        <div class="el-dialog-header">
+    <div class="my-dialog-wrapper">
+      <div class="my-dialog">
+        <div class="my-dialog-header">
           <span>退出</span>
-          <button type="button" class="el-dialog-headerbtn">
+          <button type="button" class="my-dialog-headerbtn">
             <span class="iconfont" @click="closeExitDia">&#xe621;</span>
           </button>
         </div>
-        <div class="el-dialog-body" style="padding-top: 0px">
+        <div class="my-dialog-body" style="padding-top: 0px">
           <div>确定要退出当前账号吗？</div>
         </div>
-        <div class="el-dialog-footer">
+        <div class="my-dialog-footer">
           <span class="dialog-footer">
             <button
               type="button"
-              class="el-button el-button--default"
+              class="my-button my-button--default"
               @click="closeExitDia"
             >
               <span>取消</span>
             </button>
             <button
               type="button"
-              class="el-button el-button--primary"
+              class="my-button my-button--primary"
               @click="exit"
             >
               <span>确定</span>
@@ -204,20 +204,20 @@
   <!-- 弹出修改头像框 -->
   <div v-if="ifAvaDia">
     <div class="v-modal"></div>
-    <div class="el-dialog-wrapper">
-      <div class="el-dialog">
-        <div class="el-dialog-header">
+    <div class="my-dialog-wrapper">
+      <div class="my-dialog">
+        <div class="my-dialog-header">
           <span>上传新头像</span>
-          <button type="button" class="el-dialog-headerbtn">
+          <button type="button" class="my-dialog-headerbtn">
             <span class="iconfont" @click="closeAvakDia">&#xe621;</span>
           </button>
         </div>
-        <div class="el-dialog-body" style="padding-top: 0px">
+        <div class="my-dialog-body" style="padding-top: 0px">
           <div class="set-avatar-container">
             <div class="upload-btn">
-              <button type="button" class="el-button el-button-upload">
+              <button type="button" class="my-button my-button-upload">
                 <span>
-                  <i class="el-icon-upload" style="color: #82a5fe"></i>
+                  <i class="my-icon-upload" style="color: #82a5fe"></i>
                   <span class="upload-text">请选择要上传的图片</span>
                 </span>
               </button>
@@ -225,11 +225,11 @@
             </div>
           </div>
         </div>
-        <div class="el-dialog-footer">
+        <div class="my-dialog-footer">
           <span class="dialog-footer">
             <button
               type="button"
-              class="el-button el-button--default"
+              class="my-button my-button--default"
               @click="closeAvakDia"
             >
               <span>取消</span>
@@ -417,8 +417,6 @@ export default defineComponent({
 </script>
 <style scoped>
 body {
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
-    STHeitiSC-Light, Microsoft YaHei, \\5fae\8f6f\96c5\9ed1, SimSun, sans-serif;
   font-size: 14px;
   padding: 0;
   margin: 0;
@@ -459,18 +457,18 @@ button {
   max-width: 95%;
   min-width: 650px;
 }
-.left-el-header {
+.left-my-header {
   display: flex;
   font-size: 16px;
   align-items: center;
   cursor: pointer;
 }
-.left-el-header img {
+.left-my-header img {
   width: 20px;
   height: 20px;
   /* vertical-align: text-bottom; */
 }
-.right-el-header {
+.right-my-header {
   font-size: 16px;
 }
 .header-word-center {
@@ -486,7 +484,7 @@ button {
   text-align: right;
   width: 16.66667%;
 }
-.el-button-exit {
+.my-button-exit {
   color: #ffffff;
   background: #fc4e19;
   height: 32px;
@@ -599,7 +597,7 @@ button {
   font-size: 16px;
   display: flex;
 }
-.el-row {
+.my-row {
   position: relative;
   box-sizing: border-box;
 }
@@ -627,17 +625,17 @@ button {
 .nickname-form {
   display: flex;
 }
-.el-row {
+.my-row {
   position: relative;
   box-sizing: border-box;
 }
-.el-col-8 {
+.my-col-8 {
   width: 33.33333%;
   /* padding-left: 12px; */
   padding-right: 8px;
 }
 /* 输入框样式 */
-.el-input {
+.my-input {
   width: 80%;
   height: 35px;
   margin: 0 auto;
@@ -652,34 +650,34 @@ button {
   padding: 3px 10px;
   transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
-.el-col-16 {
+.my-col-16 {
   text-align: right;
   width: 66.66667%;
   padding-left: 12px;
   padding-right: 12px;
 }
 /* 按钮样式 */
-.el-button--default {
+.my-button--default {
   color: #333;
   background-color: #f2f5fa;
   height: 32px;
   line-height: 0;
   margin-right: 8px;
 }
-.el-button {
+.my-button {
   font-size: 14px;
   padding: 10px 20px;
   border-radius: 2px;
   letter-spacing: 0.2px;
 }
-.el-button--primary {
+.my-button--primary {
   color: #ffffff;
   background: #1488ed;
   height: 32px;
   line-height: 0;
 }
 /* 修改密码弹出框 */
-.el-dialog-wrapper {
+.my-dialog-wrapper {
   height: 185px;
   width: 450px;
   top: 35%;
@@ -689,7 +687,7 @@ button {
   background: #ffffff;
   border-radius: 4px;
 }
-.el-dialog {
+.my-dialog {
   top: auto !important;
   font-size: 14px;
   position: relative;
@@ -701,27 +699,27 @@ button {
   box-sizing: border-box;
   margin-bottom: 50px;
 }
-.el-dialog .el-dialog-header {
+.my-dialog .my-dialog-header {
   padding: 30px 0;
   margin: 0 30px;
   border-bottom: 1px solid #e9e9e9;
 }
-.el-dialog .el-dialog-body {
+.my-dialog .my-dialog-body {
   padding: 18px 30px 30px;
   color: #48576a;
   font-size: 14px;
 }
-.el-dialog .el-dialog-footer {
+.my-dialog .my-dialog-footer {
   padding: 0 30px 18px;
   text-align: right;
   box-sizing: border-box;
 }
-.el-dialog .el-dialog-header span {
+.my-dialog .my-dialog-header span {
   color: #3c414b;
   font-size: 18px;
   text-align: left;
 }
-.el-dialog-header span {
+.my-dialog-header span {
   display: block;
   padding-right: 20px;
   white-space: nowrap;
@@ -729,13 +727,13 @@ button {
   overflow: hidden;
   word-wrap: normal;
 }
-.el-dialog-header button {
+.my-dialog-header button {
   position: absolute;
   right: 16px;
   top: 18px;
   margin-top: 15px;
 }
-.el-dialog-headerbtn {
+.my-dialog-headerbtn {
   float: right;
   background: 0 0;
   border: none;
@@ -744,11 +742,11 @@ button {
   cursor: pointer;
   font-size: 16px;
 }
-.el-dialog .el-dialog-header .el-dialog-close {
+.my-dialog .my-dialog-header .my-dialog-close {
   padding: 15px;
   font-size: 16px;
 }
-.el-dialog-headerbtn .el-dialog-close {
+.my-dialog-headerbtn .my-dialog-close {
   color: #bfcbd9;
 }
 /* 引入x错号图标 */
@@ -784,14 +782,14 @@ button {
   display: flex;
   align-items: center;
 }
-.upload-btn .el-button {
+.upload-btn .my-button {
   min-width: 171px;
   height: 32px;
   display: flex;
   justify-content: center;
   padding: 8px 10px;
 }
-.el-button-upload {
+.my-button-upload {
   color: #333;
   background: #fff;
   border-color: #e7e9eb;

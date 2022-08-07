@@ -41,3 +41,7 @@
 
 ### 0805
 * 重新写所有的题目组件，答案显示组件，跳转formdetail采用新的query传参，使用id，然后id再发请求，而不是传form过去，目前测试日期题加载有点慢，问题暂未定位
+
+### 0806
+
+* 解决题目加载问题，采用ant组件按需引入解决。完成formdetail中三个页面：alalysis,question,share三个界面，其中share分享界面的二维码，废用画布canvas的想法，采用qrcode-vue插件解决，同时完善三个界面的显示。完成formfill的界面，尚未实现功能，以及代码注释都还没写。

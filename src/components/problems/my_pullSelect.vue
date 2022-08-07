@@ -5,22 +5,33 @@
       <span class="require" v-if="problem.required">*</span
       ><span class="type">[下拉选择题]</span>
     </div>
-    <el-select v-model="result" placeholder="请选择" :disabled="isUse" class="select">
-      <el-option
+    <a-select
+      v-if="!isUse"
+      ref="select"
+      class="select"
+      :disabled="isUse"
+      v-model:value="result"
+      @change="handleChange"
+    >
+      <a-select-option
         v-for="option in problem.setting.options"
         :key="option.id"
-        :label="option.title"
         :value="option.title"
-      >
-      </el-option>
-    </el-select>
+        >{{ option.title }}
+      </a-select-option>
+    </a-select>
+    <ul v-else class="list">
+      <li v-for="option in problem.setting.options" :key="option.id">
+        {{ option.title }}
+      </li>
+    </ul>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 export default defineComponent({
   name: "pullSelect",
-  props: ['index','problem','isUse'],
+  props: ["index", "problem", "isUse"],
   setup() {
     const result = ref("");
 
@@ -55,5 +66,12 @@ export default defineComponent({
 .select {
   margin-top: 16px;
   margin-left: 16px;
+  width: 200px;
+}
+.list {
+  margin-top: 16px;
+  margin-left: 32px;
+  color: #707070;
+  font-size: 16px;
 }
 </style>

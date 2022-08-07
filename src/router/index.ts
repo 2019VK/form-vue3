@@ -45,6 +45,11 @@ const routes: Array<RouteRecordRaw> = [
       }
     ]
   },
+  {
+    path: '/formfill',
+    name: 'formfill',
+    component: () => import('../views/FormFill/FormFill.vue')
+  },
 ]
 
 const router = createRouter({

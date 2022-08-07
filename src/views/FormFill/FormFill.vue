@@ -1,56 +1,60 @@
 <template>
-  <div class="contain">
-    <main class="main">
-      <div class="page_content" id="form_Container">
-        <div class="form-write-components" id="form_area">
-          <div class="Title-index__title">
-            {{ form.title }}
-          </div>
-          <div class="Title-index__subtitle">
-            <span style="word-break: break-all">{{ form.subTitle }}</span>
-          </div>
+  <div class="box-header">
+    <div class="left-wrap">
+      <div class="headerbtn" @click="goIndex">
+        <img src="./assets/goback.png" class="goback" />
+        <span>{{ form.title }}</span>
+      </div>
+    </div>
+    <AvaNickname></AvaNickname>
+  </div>
+  <main class="main">
+    <div class="page_content" id="form_Container">
+      <div class="form-write-components" id="form_area">
+        <div class="Title-index__title">
+          {{ form.title }}
+        </div>
+        <div class="Title-index__subtitle">
+          <span style="word-break: break-all">{{ form.subTitle }}</span>
+        </div>
 
-          <div class="problems">
-            <problems :isUse="true" :problems="form.problems"></problems>
-          </div>
+        <div class="problems">
+          <problems :isUse="false" :problems="form.problems"></problems>
+        </div>
 
-          <div class="formFill">
-            <span class="formFillBtn" @click="toFormFill">填写表单</span>
-          </div>
+        <div class="formFill">
+          <span class="formFillBtn" @click="onSubmit">提交</span>
         </div>
       </div>
-    </main>
-  </div>
+    </div>
+  </main>
 </template>
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 import { useStore } from "vuex";
-import {useRoute,useRouter} from 'vue-router'
+import { useRoute, useRouter } from "vue-router";
+import AvaNickname from "@/components/index/AvaNickname.vue";
 import problems from "@/components/problems/problems.vue";
 export default defineComponent({
   name: "questionView",
   components: {
     problems,
+    AvaNickname,
   },
   setup() {
     const Store = useStore();
-    const route = useRoute()
-    const router = useRouter()
+    const route = useRoute();
+    const router = useRouter();
+    Store.dispatch("getForm", route.query.id);
     const form = computed(() => {
       return Store.state.FORM.form;
     });
-    function toFormFill(){
-      router.push({
-        path: "/formfill",
-        query: {
-          //路由传的参数 form 在formdetail接收
-          id: route.query.id,
-        },
-      });
+    function goIndex() {
+      router.push("/");
     }
     return {
       form,
-      toFormFill
+      goIndex,
     };
   },
 });
@@ -58,7 +62,6 @@ export default defineComponent({
 <style scoped>
 body {
   margin: 0;
-  font-family: Microsoft Yahei;
   font-size: 14px;
   line-height: 1.5;
   min-width: 1000px;
@@ -69,51 +72,45 @@ a {
   color: #000;
 }
 
-header {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 99;
-  border-bottom: 1px solid #e7e9eb;
-  width: 100%;
+.box-header {
   height: 80px;
-  justify-content: space-between;
-  padding: 0 16px;
-  background: white;
+  background: #fff;
+  box-shadow: 0 1px 0 0 #dbdbdb;
+  border-radius: 2px;
+  border: 1px solid #e7e9eb;
   padding: 0 30px;
-  align-content: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-
+.left-wrap {
+  height: 80px;
+  padding-left: 8px;
+}
+.headerbtn {
+  height: 80px;
+  cursor: pointer;
+  font-size: 16px;
+  vertical-align: middle;
+  display: flex;
+  font-size: 16px;
+  align-items: center;
+}
+.headerbtn span {
+  font-size: 16px;
+  padding-left: 8px;
+}
+.goback {
+  width: 20px;
+  height: 20px;
+  /* vertical-align: text-bottom; */
+}
 /* .main {
   max-width: 80%;
   min-width: 700px;
   margin-right: auto;
   margin-left: auto;
 }  */
-
-.header-inner {
-  line-height: 25px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.header_title {
-  font-size: 16px;
-  font-weight: 500;
-  padding-left: 8px;
-  color: #333;
-  margin: 0.67em 0;
-}
-
-.goback {
-  width: 20px;
-  height: 20px;
-  /* vertical-align: text-bottom; */
-}
 
 .page_content {
   margin: auto;
@@ -171,9 +168,5 @@ header {
   display: flex;
   line-height: 32px;
   padding: 0 20px;
-}
-
-.checkbox_item {
-  margin: 0;
 }
 </style>
