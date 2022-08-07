@@ -5,19 +5,28 @@
       <span class="require" v-if="problem.required">*</span
       ><span class="type">[打分题]</span>
     </div>
-    <el-rate v-model="result" :disabled="isUse" class="rate"></el-rate>
+    <el-rate v-model="result" :disabled="isUse" class="rate" @change="sendResult"></el-rate>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref,inject } from "vue";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "scoreQuestion",
   props: ['index','problem','isUse'],
-  setup() {
+  setup(props) {
     let result = ref(0);
-
+    let receiveResult: any = inject("receiveResult");
+    function sendResult(){
+      if (props.problem.required && result.value === 0) {
+        ElMessage.error("该题为必填项，不能为空");
+        return;
+      }
+      receiveResult(props.index, result.value);
+    }
     return {
       result,
+      sendResult
     };
   },
 });

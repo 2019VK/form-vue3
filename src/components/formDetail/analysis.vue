@@ -28,7 +28,7 @@
     <!-- 结果显示组件 -->
     <div v-if="items">
       <Result
-        v-for="(res, index) in items[page].result"
+        v-for="(res, index) in items[page]?.result"
         :key="res.id"
         :index="index"
         :result="res"

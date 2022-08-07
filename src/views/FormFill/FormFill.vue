@@ -30,13 +30,14 @@
   </main>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, provide, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import AvaNickname from "@/components/index/AvaNickname.vue";
 import problems from "@/components/problems/problems.vue";
+import { reqInputForm } from "@/api/form";
 export default defineComponent({
-  name: "questionView",
+  name: "formFill",
   components: {
     problems,
     AvaNickname,
@@ -45,16 +46,66 @@ export default defineComponent({
     const Store = useStore();
     const route = useRoute();
     const router = useRouter();
-    Store.dispatch("getForm", route.query.id);
+    let formFillinfo: any = reactive({
+      formId: "",
+      problems: [],
+    });
+    Store.dispatch("getForm", route.query.id).then(() => {
+      formFillinfo.formId = Store.state.FORM.form.id;
+      formFillinfo.problems = Store.state.FORM.form.problems;
+    });
     const form = computed(() => {
       return Store.state.FORM.form;
     });
     function goIndex() {
       router.push("/");
     }
+
+    type Result =
+      | string
+      | number
+      | {
+          id: string;
+          title: string;
+        }
+      | {
+          id: string;
+          title: string;
+        }[];
+
+    function receiveResult(index: number, result: Result) {
+      // console.log(index, result);
+      formFillinfo.problems[index].result = result;
+    }
+    async function onSubmit() {
+      let isEmpty = false
+      for (const item of formFillinfo.problems) {
+        if(item.required){
+          delete item.required
+          if(!item.result){
+            isEmpty = true
+            break
+          }
+        }
+      }
+      if(isEmpty){
+        alert('有必填项还未填写哦，请重新填写！')
+        return
+      }
+      const res: any = await reqInputForm(formFillinfo);
+      if (res.stat !== "ok") {
+        alert(`填写失败，${res.response.data.msg}`);
+      } else {
+        alert("填写成功");
+        router.push("/");
+      }
+    }
+    provide("receiveResult", receiveResult);
     return {
       form,
       goIndex,
+      formFillinfo,
+      onSubmit,
     };
   },
 });

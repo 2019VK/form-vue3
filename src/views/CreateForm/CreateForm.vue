@@ -382,7 +382,7 @@ option {
 .left-item {
   margin: 20px;
   width: 280px;
-  min-height: 720px;
+  height: 720px;
   background-color: #fff;
   padding: 20px;
   border: 1px solid #e9e9e9;
@@ -465,7 +465,7 @@ option {
 }
 .right-item {
   display: grid;
-  min-height: 720px;
+  height: 720px;
   grid-template-columns: 1fr 1fr;
   background-color: white;
   grid-gap: 25px;

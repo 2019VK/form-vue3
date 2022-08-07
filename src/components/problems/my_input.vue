@@ -5,19 +5,34 @@
       <span class="require" v-if="problem.required">*</span
       ><span class="type">[填空题]</span>
     </div>
-    <el-input v-model="result" placeholder="请输入答案" :disabled="isUse" />
+    <el-input
+      v-model="result"
+      placeholder="请输入答案"
+      :disabled="isUse"
+      @change="sendResult"
+    />
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, inject } from "vue";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "inputQuestion",
   props: ["index", "problem", "isUse"],
-  setup() {
+  setup(props) {
     let result = ref("");
+    let receiveResult: any = inject("receiveResult");
+    function sendResult(e: string) {
+      if (props.problem.required && e.length === 0) {
+        ElMessage.error("该题为必填项，不能为空");
+        return;
+      }
+      receiveResult(props.index, e);
+    }
 
     return {
       result,
+      sendResult,
     };
   },
 });

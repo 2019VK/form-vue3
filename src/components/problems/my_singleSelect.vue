@@ -6,11 +6,11 @@
       ><span class="type">[单选题]</span>
     </div>
     <div class="my-2 flex items-center text-sm">
-      <el-radio-group v-model="result" class="ml-4" :disabled="isUse">
+      <el-radio-group v-model="id" class="ml-4" :disabled="isUse" @change="sendResult">
         <el-radio
           v-for="option in problem.setting.options"
           :key="option.id"
-          :label="option.title"
+          :label="option.id"
           >{{ option.title }}</el-radio
         >
       </el-radio-group>
@@ -18,15 +18,32 @@
   </div> 
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref,inject, reactive } from "vue";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "singleSelect",
   props: ['index','problem','isUse'],
-  setup() {
-    const result = ref("");
+  setup(props) {
+    const id = ref("");
+    const result = reactive({
+      id:'',
+      title:''
+    })
+    let receiveResult:any = inject('receiveResult')
+    function sendResult(){
+      result.id = id.value
+      if(props.problem.required && result.id.length === 0){
+        ElMessage.error('该题为必填项，不能为空')
+        return
+      }
+      result.title = props.problem.setting.options.find((item:any) => item.id === id.value).title
+      receiveResult(props.index,result)
+    }
 
     return {
+      id,
       result,
+      sendResult,
     };
   },
 });

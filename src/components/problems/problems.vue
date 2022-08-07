@@ -18,7 +18,7 @@ import my_score from "@/components/problems/my_score.vue";
 import my_date from "@/components/problems/my_date.vue";
 import my_time from "@/components/problems/my_time.vue";
 export default defineComponent({
-  name: "FormFill",
+  name: "problemsView",
   components: {
     my_input,
     my_singleSelect,

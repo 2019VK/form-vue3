@@ -10,20 +10,30 @@
         v-model:value="result"
         value-format="HH:mm:ss"
         :disabled="isUse"
+        @change="sendResult"
       />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref,inject } from "vue";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "timeQuestion",
   props: ["index", "problem", "isUse"],
-  setup() {
+  setup(props) {
     let result = ref("");
-
+    let receiveResult: any = inject("receiveResult");
+    function sendResult(){
+      if (props.problem.required && result.value.length === 0) {
+        ElMessage.error("该题为必填项，不能为空");
+        return;
+      }
+      receiveResult(props.index, result.value);
+    }
     return {
       result,
+      sendResult
     };
   },
 });

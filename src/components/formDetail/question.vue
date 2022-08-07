@@ -23,7 +23,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed,provide } from "vue";
 import { useStore } from "vuex";
 import {useRoute,useRouter} from 'vue-router'
 import problems from "@/components/problems/problems.vue";
@@ -48,6 +48,10 @@ export default defineComponent({
         },
       });
     }
+    // provide("receiveResult", receiveResult);
+    // function receiveResult() {
+    //   // 
+    // }
     return {
       form,
       toFormFill

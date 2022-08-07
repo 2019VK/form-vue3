@@ -5,26 +5,53 @@
       <span class="require" v-if="problem.required">*</span
       ><span class="type">[多选题]</span>
     </div>
-    <el-checkbox-group v-model="result" class="select" :disabled="isUse">
+    <el-checkbox-group v-model="ids" class="select" :disabled="isUse">
       <el-checkbox
         v-for="option in problem.setting.options"
         :key="option.id"
-        :label="option.title"
+        :label="option.id"
         size="large"
-      />
+        @change="sendResult"
+        >{{ option.title }}</el-checkbox
+      >
     </el-checkbox-group>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, inject } from "vue";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "multiSelect",
-  props: ['index','problem','isUse'],
-  setup() {
-    const result = ref([]);
+  props: ["index", "problem", "isUse"],
+  setup(props) {
+    const ids = ref([]);
+
+    let receiveResult: any = inject("receiveResult");
+    function sendResult() {
+      let result: object[] = [];
+      if (props.problem.required && ids.value.length === 0) {
+        ElMessage.error("该题为必填项，不能为空");
+        return;
+      }
+      console.log("遍历");
+
+      for (const id of ids.value) {
+        let res = {
+          id: "",
+          title: "",
+        };
+        res.id = id;
+        res.title = props.problem.setting.options.find(
+          (item: any) => item.id === id
+        ).title;
+        result.push(res);
+      }
+      receiveResult(props.index,result)
+    }
 
     return {
-      result,
+      ids,
+      sendResult,
     };
   },
 });

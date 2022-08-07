@@ -10,13 +10,13 @@
       ref="select"
       class="select"
       :disabled="isUse"
-      v-model:value="result"
-      @change="handleChange"
+      v-model:value="id"
+      @change="sendResult"
     >
       <a-select-option
         v-for="option in problem.setting.options"
         :key="option.id"
-        :value="option.title"
+        :value="option.id"
         >{{ option.title }}
       </a-select-option>
     </a-select>
@@ -28,15 +28,32 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref,reactive,inject } from "vue";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "pullSelect",
   props: ["index", "problem", "isUse"],
-  setup() {
-    const result = ref("");
+  setup(props) {
+    const id = ref("");
+    const result = reactive({
+      id:'',
+      title:''
+    });
+    let receiveResult:any = inject('receiveResult')
+    function sendResult(){
+      result.id = id.value
+      if(props.problem.required && result.id.length === 0){
+        ElMessage.error('该题为必填项，不能为空')
+        return
+      }
+      result.title = props.problem.setting.options.find((item:any) => item.id === id.value).title
+      receiveResult(props.index,result)
+    }
 
     return {
+      id,
       result,
+      sendResult
     };
   },
 });

@@ -10,25 +10,30 @@
         v-model:value="value"
         format="YYYY-MM-DD"
         :disabled="isUse"
-        @change="onChange"
+        @change="sendResult"
       />
     </div>
   </div>
 </template>
 <script lang="ts">
 import { Dayjs } from "dayjs";
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref,inject } from "vue";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "dateQuestion",
   props: ["index", "problem", "isUse"],
-  setup() {
-    function onChange(value: Dayjs, dateString: string) {
-      console.log("Selected Time: ", value);
-      console.log("Formatted Selected Time: ", dateString);
+  setup(props) {
+    let receiveResult: any = inject("receiveResult");
+    function sendResult(value: Dayjs, dateString: string) {
+      if (props.problem.required && dateString.length === 0) {
+        ElMessage.error("该题为必填项，不能为空");
+        return;
+      }
+      receiveResult(props.index, dateString);
     }
     return {
       value: ref<Dayjs>(),
-      onChange,
+      sendResult,
     };
   },
 });
