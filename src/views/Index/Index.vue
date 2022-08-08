@@ -110,9 +110,14 @@ export default defineComponent({
     });
     // 计算当前页数
     let page = computed(() => {
-      return isStar.value
+      if(allPage.value === 0){
+        return 0
+      }else{
+        return isStar.value
         ? formStarInfo.value.offset + 1
         : formInfo.value.offset + 1;
+      }
+      
     });
 
     // 跳转新建表单
@@ -352,6 +357,7 @@ main {
   margin-top: 40px;
   font-size: 18px;
   font-weight: 400;
+  height: 630px;
 }
 .param1late {
   display: flex;

@@ -1,5 +1,6 @@
 <template>
-  <div class="main-header main">
+  <!-- 判断有没有答案，没有则显示else里面得到暂时无答案 -->
+  <div class="main-header main" v-if="total != 0">
     <!-- 显示一共多少份答案 -->
     <div class="form-title">共收集{{ total }}份数据（{{ status }}）</div>
     <div class="form-number">
@@ -34,35 +35,51 @@
         :result="res"
       ></Result>
     </div>
-    
+  </div>
+  <!-- 显示暂时没有答案 -->
+  <div v-else class="empty-result">
+    <img src="./assets/empty-result.png" />
+    <span>暂时没结果，请稍后再来哦</span>
   </div>
 </template>
 <script lang="ts">
+// 引入路由和vuex仓库
 import { useRoute } from "vue-router";
 import { useStore } from "vuex";
-import Result from '@/components/result/result.vue'
+// 引入结果组件
+import Result from "@/components/result/result.vue";
+// 引入vue基本函数
 import { computed, defineComponent, ref } from "vue";
 export default defineComponent({
   name: "analysisView",
-  components:{Result},
+  // 注册组件
+  components: { Result },
   setup() {
+    // 注册仓库和路由
     const Store = useStore();
     const route = useRoute();
+    // 发请求获取表单数据，存在仓库中
     Store.dispatch("getFormDetail", route.query.id);
+    // 定义当前页码
     const page = ref(0);
-
+    // 分别从仓库中取出服务器返回的表单所有信息、结果信息、题目信息，结果条数
+    // 所有信息，里面包含info和items
     const formDetail = computed(() => {
       return Store.state.FORM.formDetail;
     });
+    // 结果信息，里面包含要显示的结果
     const items = computed(() => {
       return formDetail.value.items;
     });
+    // 题目信息
     const info = computed(() => {
       return formDetail.value.info;
     });
+    // 收集到的结果条数
     const total = computed(() => {
       return items.value?.length;
     });
+    // 将数字的状态转换成中文
     const status = computed(() => {
       switch (formDetail.value.info?.status) {
         case 1:
@@ -76,20 +93,21 @@ export default defineComponent({
       }
       return "error";
     });
-    function prePage(){
-      if(page.value>0){
-        page.value -= 1
+    // 上一页函数，在不越界的情况下，将page减一即可
+    function prePage() {
+      if (page.value > 0) {
+        page.value -= 1;
       }
-      return 
+      return;
+    }
+    // 下一页函数，在不越界的情况下，将page加一即可
+    function nextPage() {
+      if (page.value < total.value - 1) {
+        page.value += 1;
+      }
+      return;
     }
 
-    function nextPage(){
-      if(page.value < total.value-1){
-        page.value += 1
-      }
-      return 
-    }
-    
     return {
       formDetail,
       status,
@@ -98,7 +116,7 @@ export default defineComponent({
       total,
       info,
       prePage,
-      nextPage
+      nextPage,
     };
   },
 });
@@ -168,5 +186,12 @@ export default defineComponent({
   line-height: 20px;
   color: #767c85;
   font-size: 16px;
+}
+.empty-result {
+  padding-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #767c85;
 }
 </style>

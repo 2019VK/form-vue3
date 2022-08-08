@@ -23,23 +23,31 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed,provide } from "vue";
+// 引入基本注册组件和计算属性
+import { defineComponent, computed, provide } from "vue";
+// 引入vuex仓库
 import { useStore } from "vuex";
-import {useRoute,useRouter} from 'vue-router'
+// 引入路由器，路由
+import { useRoute, useRouter } from "vue-router";
+// 引入题目组件（里面封装了7种题目组件）
 import problems from "@/components/problems/problems.vue";
 export default defineComponent({
   name: "questionView",
+  // 注册组件
   components: {
     problems,
   },
   setup() {
+    // 定义仓库，路由，路由器
     const Store = useStore();
-    const route = useRoute()
-    const router = useRouter()
+    const route = useRoute();
+    const router = useRouter();
+    // 从仓库中取当前表单信息
     const form = computed(() => {
       return Store.state.FORM.form;
     });
-    function toFormFill(){
+    // 跳转表单填写函数
+    function toFormFill() {
       router.push({
         path: "/formfill",
         query: {
@@ -48,13 +56,16 @@ export default defineComponent({
         },
       });
     }
-    // provide("receiveResult", receiveResult);
-    // function receiveResult() {
-    //   // 
-    // }
+    // 注入空参数给组件，消除警告
+    provide("receiveResult", receiveResult);
+    // 空函数，消除警告
+    function receiveResult() {
+      //
+    }
+
     return {
       form,
-      toFormFill
+      toFormFill,
     };
   },
 });

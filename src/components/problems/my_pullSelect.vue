@@ -28,32 +28,47 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref,reactive,inject } from "vue";
+// 引入vue基本的函数
+import { defineComponent, ref, reactive, inject } from "vue";
+// 引入element的消息提示
 import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "pullSelect",
+  // 接收父组件的值
   props: ["index", "problem", "isUse"],
   setup(props) {
+    // 定义id双向绑定选择的id
     const id = ref("");
+    // 定义需要的result
     const result = reactive({
-      id:'',
-      title:''
+      id: "",
+      title: "",
     });
-    let receiveResult:any = inject('receiveResult')
-    function sendResult(){
-      result.id = id.value
-      if(props.problem.required && result.id.length === 0){
-        ElMessage.error('该题为必填项，不能为空')
-        return
+    // 接收发result给爷爷组件的函数
+    let receiveResult: any = inject("receiveResult");
+    // 发送所填写的结果给爷爷组件
+    /*
+     *先将result的值更新为新的数据
+     *根据得到的id用find函数找到相对应的title
+     *如果输入空，应该直接返回，提示用户
+     * 不为空才发送给爷爷组件汇总
+     */
+    function sendResult() {
+      result.id = id.value;
+      if (props.problem.required && result.id.length === 0) {
+        ElMessage.error("该题为必填项，不能为空");
+        return;
       }
-      result.title = props.problem.setting.options.find((item:any) => item.id === id.value).title
-      receiveResult(props.index,result)
+      result.title = props.problem.setting.options.find(
+        (item: any) => item.id === id.value
+      ).title;
+      receiveResult(props.index, result);
     }
 
     return {
       id,
       result,
-      sendResult
+      sendResult,
     };
   },
 });

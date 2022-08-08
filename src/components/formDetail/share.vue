@@ -2,7 +2,9 @@
   <div class="box">
     <div class="content">
       <div class="qrcode_box">
+        <!-- 标题 -->
         <h2 class="title">{{ form.title }}</h2>
+        <!-- 二维码 -->
         <qrcode-vue
           :value="qrUrl"
           :size="QRsize"
@@ -19,24 +21,33 @@
   <div></div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+// 引入基本的定义组件函数，计算属性
+import { computed, defineComponent } from "vue";
+// 引入仓库
 import { useStore } from "vuex";
+// 引入生成二维码的插件
 import QrcodeVue from "qrcode.vue";
+// 引入element-plus的消息提示
 import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "shareView",
+  // 注册组件
   components: { QrcodeVue },
   setup() {
+    // 定义仓库
     const Store = useStore();
+    // 从仓库中取出当前表单的信息
     const form = computed(() => {
       return Store.state.FORM.form;
     });
+    // 定义二维码大小常量
     const QRsize = 200;
-
+    // 计算二维码分享的链接
     const qrUrl = computed(() => {
       return `http://localhost:8080/formfill?id=${form.value.id}`;
     });
 
+    // 下载二维码的函数
     function downloadQrcode() {
       const myCanvas = document.getElementById("qrImg") as HTMLCanvasElement;
       const a = document.createElement("a");
@@ -44,6 +55,7 @@ export default defineComponent({
       a.download = `${form.value.title}_QRcode`;
       a.click();
     }
+    // 复制二维码链接的函数
     function copyDomText() {
       // 添加一个input元素放置需要的文本内容
       const input = document.createElement("input");
@@ -59,6 +71,7 @@ export default defineComponent({
         type: "success",
       });
     }
+
     return {
       qrUrl,
       downloadQrcode,

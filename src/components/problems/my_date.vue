@@ -16,14 +16,25 @@
   </div>
 </template>
 <script lang="ts">
+// 引入date的函数
 import { Dayjs } from "dayjs";
-import { defineComponent, ref,inject } from "vue";
+// 引入vue基本的函数
+import { defineComponent, ref, inject } from "vue";
+// 引入element的消息提示
 import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "dateQuestion",
+  // 接收父组件的值
   props: ["index", "problem", "isUse"],
   setup(props) {
+    // 接收发result给爷爷组件的函数
     let receiveResult: any = inject("receiveResult");
+    // 发送所填写的结果给爷爷组件
+    /*
+     *dateString为需要得到result值
+     *如果输入空，应该直接返回，提示用户的
+     * 不为空才发送给爷爷组件汇总
+     */
     function sendResult(value: Dayjs, dateString: string) {
       if (props.problem.required && dateString.length === 0) {
         ElMessage.error("该题为必填项，不能为空");
@@ -31,6 +42,7 @@ export default defineComponent({
       }
       receiveResult(props.index, dateString);
     }
+
     return {
       value: ref<Dayjs>(),
       sendResult,

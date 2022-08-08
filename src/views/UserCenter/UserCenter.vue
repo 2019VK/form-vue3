@@ -23,7 +23,7 @@
       <div class="avatar">
         <div class="avatar-icon">
           <div class="user-avatar" @mouseover="avaCover" @mouseleave="avatar">
-            <img :src="user.avatar" class="img-circle" />
+            <img :src="user.avatar?user.avatar:require('./assets/defaultAvatar.png')" class="img-circle" />
             <div class="avatar-mask" v-show="ifAvaCover" @click="openAvaDia">
               <div class="avatar-mask-changed">修改头像</div>
             </div>

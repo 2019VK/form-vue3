@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
+      <!-- 顶部返回和头像模块 -->
       <div class="box-header">
         <div class="left-wrap">
           <div class="headerbtn" @click="goIndex">
@@ -10,9 +11,10 @@
         </div>
         <AvaNickname></AvaNickname>
       </div>
+      <!-- 中间导航部分 -->
       <div class="box-footer">
         <router-link
-          :to="{ path: '/formdetail/analysis', query: { id:form.id } }"
+          :to="{ path: '/formdetail/analysis', query: { id: form.id } }"
           class="optionals"
           active-class="optional-active"
           >数据统计&分析</router-link
@@ -31,37 +33,45 @@
         >
       </div>
     </div>
+    <!-- 根据导航显示不同的组件 -->
     <div class="main">
-        <router-view></router-view>
+      <router-view></router-view>
     </div>
   </div>
 </template>
 <script lang="ts">
-import AvaNickname from '@/components/index/AvaNickname.vue'
-import { useRouter,useRoute } from "vue-router";
-import { computed, defineComponent, onMounted, ref } from "vue";
-import {useStore} from 'vuex'
+// 引入头像昵称组件
+import AvaNickname from "@/components/index/AvaNickname.vue";
+// 引入路由，路由器
+import { useRouter, useRoute } from "vue-router";
+// 引入vue相关函数
+import { computed, defineComponent, onMounted } from "vue";
+// 引入仓库
+import { useStore } from "vuex";
 export default defineComponent({
   name: "FormDetail",
-  components:{ AvaNickname },
+  // 注册组件
+  components: { AvaNickname },
   setup() {
-    const router = useRouter()
-    const route = useRoute()
-    const Store = useStore()
-
+    // 注册路由器，路由，store仓库
+    const router = useRouter();
+    const route = useRoute();
+    const Store = useStore();
+    // 从仓库中取出表单信息form
     const form = computed(() => {
-      return Store.state.FORM.form
-    })
-
-    function goIndex(){
-      router.push('/')
+      return Store.state.FORM.form;
+    });
+    // 返回首页函数
+    function goIndex() {
+      router.push("/");
     }
-    
 
+    // 在挂载完毕后，向服务器发请求获取数据
     onMounted(() => {
-      Store.dispatch("getForm",route.query.id)
-      Store.dispatch("getFormDetail",route.query.id)
-    })
+      Store.dispatch("getForm", route.query.id);
+      Store.dispatch("getFormDetail", route.query.id);
+    });
+
     return {
       form,
       goIndex,
@@ -89,8 +99,7 @@ a {
 /* 引用图标 */
 @font-face {
   font-family: "iconfont";
-  src: url("./assets/iconfont.ttf?t=1653909851010")
-    format("truetype");
+  src: url("./assets/iconfont.ttf?t=1653909851010") format("truetype");
 }
 .iconfont {
   font-family: "iconfont" !important;

@@ -77,13 +77,7 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  reactive,
-  toRefs,
-} from "vue";
+import { computed, defineComponent, onMounted, reactive, toRefs } from "vue";
 // 引入生成随机id的包（因为动态v-for的key要唯一）
 import { v4 as uuidv4 } from "uuid";
 // 引入组件
@@ -92,7 +86,7 @@ import inputQuestion from "@/components/createForm/inputQuestion.vue";
 import selectQuestion from "@/components/createForm/selectQuestion.vue";
 // 引入vuex仓库、路由
 import { useStore } from "vuex";
-import { useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 // 引入类型，题目的类型，初始化创建的参数
 import { Problem } from "@/type/problem";
 import { createFormData } from "@/type/form";
@@ -100,6 +94,8 @@ import { createFormData } from "@/type/form";
 import { reqCreateForm } from "@/api/form";
 // 引入element-plus函数
 import { ElMessage, ElMessageBox } from "element-plus";
+// 引入题目类型
+import { problemType } from "@/type/problem";
 
 export default defineComponent({
   name: "CreateForm",
@@ -108,7 +104,7 @@ export default defineComponent({
   setup() {
     // vuex仓库、路由器
     const Store = useStore();
-    const router = useRouter()
+    const router = useRouter();
     // 将vuex仓库中的题目类型和基础题目取出来
     const problemTypes = computed(() => {
       return Store.state.PROBLEM.problemTypes;
@@ -120,16 +116,7 @@ export default defineComponent({
     let form = reactive(new createFormData());
     // 添加题目的函数，用来添加表单中的题目
     /* 判断输入的type，看是添加填空的还是选择的题目 */
-    function addQuestion(
-      type:
-        | "input"
-        | "singleSelect"
-        | "multiSelect"
-        | "pullSelect"
-        | "date"
-        | "time"
-        | "score"
-    ) {
+    function addQuestion(type: problemType) {
       if (type.indexOf("Select") != -1) {
         addSelectProblem(type);
       } else {
@@ -137,16 +124,7 @@ export default defineComponent({
       }
     }
     // 添加填空题的函数
-    function addInputProblem(
-      type:
-        | "input"
-        | "singleSelect"
-        | "multiSelect"
-        | "pullSelect"
-        | "date"
-        | "time"
-        | "score"
-    ) {
+    function addInputProblem(type: problemType) {
       const problem: Problem = {
         title: "",
         type: type,
@@ -155,16 +133,7 @@ export default defineComponent({
       form.problems.push(problem);
     }
     // 添加选择题的函数
-    function addSelectProblem(
-      type:
-        | "input"
-        | "singleSelect"
-        | "multiSelect"
-        | "pullSelect"
-        | "date"
-        | "time"
-        | "score"
-    ) {
+    function addSelectProblem(type: problemType) {
       const problem: Problem = {
         required: true,
         setting: {
@@ -181,7 +150,11 @@ export default defineComponent({
     // 左上角的返回
     /* 返回前根据是否输入title,subtitle,problems来提示是否弹出保存草稿 */
     function goBack() {
-      if (form.title !== "" || form.subTitle !== "" || form.problems.length !== 0) {
+      if (
+        form.title !== "" ||
+        form.subTitle !== "" ||
+        form.problems.length !== 0
+      ) {
         ElMessageBox.confirm("是否将本次表单保存草稿?", {
           confirmButtonText: "保存",
           cancelButtonText: "不保存",
@@ -197,7 +170,7 @@ export default defineComponent({
             });
             router.back();
           });
-      }else{
+      } else {
         router.back();
       }
     }
@@ -271,18 +244,19 @@ export default defineComponent({
       Store.dispatch("getProblemType");
       Store.dispatch("getProblemBasic");
       // 先判断是否有保存的草稿
-      if(Store.state.FORM.draftsForm.title){
+      /* 如果有则弹窗提示是否使用，确定则将数据从仓库中取出，赋值给组件对应参数 */
+      if (Store.state.FORM.draftsForm.title) {
         ElMessageBox.confirm("检测你有保存的草稿，是否使用?", {
           confirmButtonText: "使用",
           cancelButtonText: "不使用",
         })
           .then(() => {
-            form.title = Store.state.FORM.draftsForm.title
-            form.subTitle = Store.state.FORM.draftsForm.subTitle
-            form.problems = Store.state.FORM.draftsForm.problems
+            form.title = Store.state.FORM.draftsForm.title;
+            form.subTitle = Store.state.FORM.draftsForm.subTitle;
+            form.problems = Store.state.FORM.draftsForm.problems;
           })
           .catch(() => {
-            ElMessage('未使用草稿')
+            ElMessage("未使用草稿");
           });
       }
     });
@@ -297,7 +271,7 @@ export default defineComponent({
       addbaiscProblem,
       createForm,
       ...toRefs(form),
-      saveDraftForm, 
+      saveDraftForm,
     };
   },
 });

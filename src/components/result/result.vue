@@ -14,6 +14,7 @@ export default defineComponent({
   name: "resultView",
   props: ["index", "result"],
   setup(props) {
+    // 重新计算题目类型，显示为中文的题目类型
     const type = computed(() => {
       switch (props.result.type) {
         case "input":
@@ -39,6 +40,7 @@ export default defineComponent({
     * 单选题、下拉选择题的result是object类型
     * 多选题的result是数组类型
     * 打分题的result是number类型
+    * 都不是的话，则是用户未填写
     */
     const answer = computed(() => {
       switch (typeof props.result.result) {
@@ -57,7 +59,7 @@ export default defineComponent({
             return props.result.result.title;
           }
       }
-      return "error";
+      return "未填写";
     });
 
     return {

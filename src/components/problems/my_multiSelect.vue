@@ -18,35 +18,50 @@
   </div>
 </template>
 <script lang="ts">
+// 引入vue基本的函数
 import { defineComponent, ref, inject } from "vue";
+// 引入element的消息提示
 import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "multiSelect",
+    // 接收父组件的值
   props: ["index", "problem", "isUse"],
   setup(props) {
+    // 定义ids双向绑定选择的id
     const ids = ref([]);
-
+      // 接收发result给爷爷组件的函数
     let receiveResult: any = inject("receiveResult");
+    // 发送所填写的结果给爷爷组件
+    /*
+     *先将result的值更新为新的数据
+     *根据得到的id用find函数找到相对应的title
+     *如果输入空，应该直接返回，提示用户的
+     * 不为空才发送给爷爷组件汇总
+     */
     function sendResult() {
+      // 定义需要的result
       let result: object[] = [];
+      // 如果输入空，应该直接返回，提示用户的
       if (props.problem.required && ids.value.length === 0) {
         ElMessage.error("该题为必填项，不能为空");
         return;
       }
-      console.log("遍历");
-
+      // 遍历ids里的数组，找对应的title，拼成对象数组
       for (const id of ids.value) {
+        // 写在里面，因为每次要初始化
         let res = {
           id: "",
           title: "",
         };
+        // 赋值新值
         res.id = id;
         res.title = props.problem.setting.options.find(
           (item: any) => item.id === id
         ).title;
         result.push(res);
       }
-      receiveResult(props.index,result)
+      // 发送给组件
+      receiveResult(props.index, result);
     }
 
     return {

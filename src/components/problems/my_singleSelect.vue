@@ -6,7 +6,12 @@
       ><span class="type">[单选题]</span>
     </div>
     <div class="my-2 flex items-center text-sm">
-      <el-radio-group v-model="id" class="ml-4" :disabled="isUse" @change="sendResult">
+      <el-radio-group
+        v-model="id"
+        class="ml-4"
+        :disabled="isUse"
+        @change="sendResult"
+      >
         <el-radio
           v-for="option in problem.setting.options"
           :key="option.id"
@@ -15,29 +20,44 @@
         >
       </el-radio-group>
     </div>
-  </div> 
+  </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref,inject, reactive } from "vue";
+// 引入vue基本的函数
+import { defineComponent, ref, inject, reactive } from "vue";
+// 引入element的消息提示
 import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "singleSelect",
-  props: ['index','problem','isUse'],
+  // 接收父组件的值
+  props: ["index", "problem", "isUse"],
   setup(props) {
+    // 定义id双向绑定选择的id
     const id = ref("");
+    // 定义需要的result
     const result = reactive({
-      id:'',
-      title:''
-    })
-    let receiveResult:any = inject('receiveResult')
-    function sendResult(){
-      result.id = id.value
-      if(props.problem.required && result.id.length === 0){
-        ElMessage.error('该题为必填项，不能为空')
-        return
+      id: "",
+      title: "",
+    });
+    // 接收发result给爷爷组件的函数
+    let receiveResult: any = inject("receiveResult");
+    // 发送所填写的结果给爷爷组件
+    /*
+     *先将result的值更新为新的数据
+     *根据得到的id用find函数找到相对应的title
+     *如果输入空，应该直接返回，提示用户的
+     * 不为空才发送给爷爷组件汇总
+     */
+    function sendResult() {
+      result.id = id.value;
+      if (props.problem.required && result.id.length === 0) {
+        ElMessage.error("该题为必填项，不能为空");
+        return;
       }
-      result.title = props.problem.setting.options.find((item:any) => item.id === id.value).title
-      receiveResult(props.index,result)
+      result.title = props.problem.setting.options.find(
+        (item: any) => item.id === id.value
+      ).title;
+      receiveResult(props.index, result);
     }
 
     return {

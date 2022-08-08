@@ -14,14 +14,24 @@
   </div>
 </template>
 <script lang="ts">
+// 引入vue基础函数
 import { defineComponent, ref, inject } from "vue";
+// 引入element-plus的消息提示
 import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "inputQuestion",
+  // 接收父组件的传值
   props: ["index", "problem", "isUse"],
   setup(props) {
+    // 定义result双向绑定输入的值
     let result = ref("");
+    // 注入爷爷组件传过来的函数
     let receiveResult: any = inject("receiveResult");
+    // 发送所填写的结果给爷爷组件
+    /*
+     *如果输入空，应该直接返回，提示用户的
+     * 不为空才发送给爷爷组件汇总
+     */
     function sendResult(e: string) {
       if (props.problem.required && e.length === 0) {
         ElMessage.error("该题为必填项，不能为空");

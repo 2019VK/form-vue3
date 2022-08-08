@@ -24,9 +24,6 @@
           <problems :isUse="false" :problems="form.problems"></problems>
         </div>
 
-        <div class="formFill">
-          <span class="formFillBtn" @click="onSubmit">提交</span>
-        </div>
       </div>
     </div>
   </main>
@@ -42,8 +39,7 @@ import { useRoute, useRouter } from "vue-router";
 import AvaNickname from "@/components/index/AvaNickname.vue";
 // 引入题目组件
 import problems from "@/components/problems/problems.vue";
-// 引入填写表单函数
-import { reqInputForm } from "@/api/form";
+
 export default defineComponent({
   name: "formFill",
   // 注册组件
@@ -92,48 +88,11 @@ export default defineComponent({
     }
     // 提供给后代组件
     provide("receiveResult", receiveResult);
-    // 提交函数
-    /*
-     *提交前要判断是否有必填项未填,有的话直接结束函数
-     *同时要处理:要把必填项的requred参数去掉
-     *最后再调用接口向服务器发送请求
-     */
-    async function onSubmit() {
-      // 定义常量表示是否有必填项未填,默认为false
-      let isEmpty = false;
-      // 遍历整个参数,如果有必填项,将其require参数去掉,如果答案为空,则将标识置为true
-      for (const item of formFillinfo.problems) {
-        // 判断是否为必填项
-        if (item.required) {
-          // 去除require参数
-          delete item.required;
-          // 判断结果是否为空
-          if (!item.result) {
-            isEmpty = true;
-            break;
-          }
-        }
-      }
-      // 判断标识是否为true,为真则结束函数
-      if (isEmpty) {
-        alert("有必填项还未填写哦，请重新填写！");
-        return;
-      }
-      // 向服务器发请求
-      const res: any = await reqInputForm(formFillinfo);
-      if (res.stat !== "ok") {
-        alert(`填写失败，${res.response.data.msg}`);
-      } else {
-        alert("填写成功");
-        router.push("/");
-      }
-    }
-
+    
     return {
       form,
       goIndex,
       formFillinfo,
-      onSubmit,
     };
   },
 });
