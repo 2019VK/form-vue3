@@ -35,6 +35,7 @@ import { reactive, toRefs } from '@vue/reactivity';
 import {reqRegister} from '@/api/auth';
 import { useRouter } from 'vue-router'
 import {defineComponent} from 'vue'
+import { ElMessage } from 'element-plus'
 export default defineComponent({
   name: "RegisterView",
   setup(){
@@ -46,9 +47,14 @@ export default defineComponent({
     async function register(){
       const res:any = await reqRegister(data.registerData)
       if(res.stat !== 'ok'){
-        alert(`注册失败，${res.response.data.msg}`)
+        // alert(`注册失败，${res.response.data.msg}`)
+        ElMessage.error(`注册失败，${res.response.data.msg}`)
       }else{
-        alert('注册成功，请返回登入')
+        // alert('注册成功，请返回登入')
+        ElMessage({
+          message: '注册成功，将返回登入',
+          type: 'success',
+        })
         router.push('/login')
       }
     }

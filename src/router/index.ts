@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/createform',
     name: 'createform',
-    component: () => import('../views/CreateForm/CreateForm.vue')
+    component: () => import('../views/CreateForm/CreateForm.vue'),
   },
   {
     path: '/formdetail',
@@ -50,6 +50,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'formfill',
     component: () => import('../views/FormFill/FormFill.vue')
   },
+  {
+    path: '/formpreview',
+    name: 'formpreview',
+    component: () => import('../views/FormPreview/FormPreview.vue')
+  },
+
 ]
 
 const router = createRouter({

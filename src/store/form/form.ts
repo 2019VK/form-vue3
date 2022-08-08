@@ -1,7 +1,7 @@
 import { reqGetFormList,reqGetForm,reqFromResult } from "@/api/form";
 import { GetFormList,FormItem,FormList,CreateForm } from "@/type/form";
-// import { FormList,CreateForm } from "@/type/form";
 import { formResult } from "@/type/result";
+import { ElMessage } from 'element-plus'
 
 export default {
   namespace:true,
@@ -27,7 +27,7 @@ export default {
     // 当前表单
     form:{},
     // formDetail表单详细信息
-    formDetail:{}
+    formDetail:{},
   },
   getters: {
     allPage(state:any){
@@ -67,7 +67,8 @@ export default {
       const res: any = await reqGetFormList(data);
       // console.log(res);
       if (res.stat !== "ok") {
-        alert("获取表单列表失败");
+        // alert("获取表单列表失败");
+        ElMessage.error('获取表单列表失败')
       } else {
         context.commit("formList", res.data);
       }
@@ -76,7 +77,8 @@ export default {
     async getForm(context: any,id:string) {
       const res:any = await reqGetForm(id)
       if (res.stat !== "ok") {
-        alert("获取表单失败");
+        // alert("获取表单失败");
+        ElMessage.error('获取表单失败')
       } else {
         context.commit("form", res.data.item);
       }
@@ -86,7 +88,8 @@ export default {
       const res:any = await reqFromResult(id)
       // console.log(res);
       if (res.stat !== "ok") {
-        alert("获取表单详情失败");
+        // alert("获取表单详情失败");
+        ElMessage.error('获取表单详情失败')
       } else {
         context.commit("formDetail", res.data);
       }

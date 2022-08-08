@@ -44,6 +44,10 @@ import AvaNickname from "@/components/index/AvaNickname.vue";
 import problems from "@/components/problems/problems.vue";
 // 引入填写表单函数
 import { reqInputForm } from "@/api/form";
+// 引入输入结果的类型
+import { Result } from "@/type/result";
+// 引入element-plus的消息提示
+import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "formFill",
   // 注册组件
@@ -74,18 +78,7 @@ export default defineComponent({
     function goIndex() {
       router.push("/");
     }
-    // 定义结果的类型
-    type Result =
-      | string
-      | number
-      | {
-          id: string;
-          title: string;
-        }
-      | {
-          id: string;
-          title: string;
-        }[];
+
     // 定义一个函数用来爷孙组件通信,通过provide提供给后代组件
     function receiveResult(index: number, result: Result) {
       formFillinfo.problems[index].result = result;
@@ -116,15 +109,21 @@ export default defineComponent({
       }
       // 判断标识是否为true,为真则结束函数
       if (isEmpty) {
-        alert("有必填项还未填写哦，请重新填写！");
+        // alert("有必填项还未填写哦，请重新填写！");
+        ElMessage.error("有必填项还未填写哦，请重新填写！");
         return;
       }
       // 向服务器发请求
       const res: any = await reqInputForm(formFillinfo);
       if (res.stat !== "ok") {
-        alert(`填写失败，${res.response.data.msg}`);
+        // alert(`填写失败，${res.response.data.msg}`);
+        ElMessage.error(`填写失败，${res.response.data.msg}`);
       } else {
-        alert("填写成功");
+        // alert("填写成功");
+        ElMessage({
+          message: "填写成功",
+          type: "success",
+        });
         router.push("/");
       }
     }

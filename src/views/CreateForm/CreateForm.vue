@@ -9,6 +9,7 @@
       <AvaNickname></AvaNickname>
     </div>
   </header>
+
   <main>
     <div class="container">
       <!-- 左侧 -->
@@ -68,7 +69,7 @@
       </div>
       <!-- 右侧 -->
       <div class="right-item">
-        <button @click="toProblem">预览</button>
+        <button @click="toPreview">预览</button>
         <button @click="saveDraftForm">保存草稿</button>
         <button class="create" @click="createForm">完成创建</button>
       </div>
@@ -86,7 +87,7 @@ import inputQuestion from "@/components/createForm/inputQuestion.vue";
 import selectQuestion from "@/components/createForm/selectQuestion.vue";
 // 引入vuex仓库、路由
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 // 引入类型，题目的类型，初始化创建的参数
 import { Problem } from "@/type/problem";
 import { createFormData } from "@/type/form";
@@ -100,11 +101,16 @@ import { problemType } from "@/type/problem";
 export default defineComponent({
   name: "CreateForm",
   // 注册组件
-  components: { AvaNickname, inputQuestion, selectQuestion },
+  components: {
+    AvaNickname,
+    inputQuestion,
+    selectQuestion,
+  },
   setup() {
-    // vuex仓库、路由器
+    // vuex仓库、路由器、路由
     const Store = useStore();
     const router = useRouter();
+    const route = useRoute();
     // 将vuex仓库中的题目类型和基础题目取出来
     const problemTypes = computed(() => {
       return Store.state.PROBLEM.problemTypes;
@@ -161,17 +167,17 @@ export default defineComponent({
         })
           .then(() => {
             saveDraftForm();
-            router.back();
+            router.push("/");
           })
           .catch(() => {
             ElMessage({
               type: "warning",
               message: "未保存草稿",
             });
-            router.back();
+            router.push("/");
           });
       } else {
-        router.back();
+        router.push("/");
       }
     }
     // 创建随机id的函数
@@ -238,26 +244,55 @@ export default defineComponent({
         type: "success",
       });
     }
+    // 计算接收的form参数
+    const routeForm = computed(() => {
+      if (route.params.form) {
+        return JSON.parse(route.params.form as string);
+      } else {
+        return false;
+      }
+    });
+    // 跳转预览界面
+    function toPreview() {
+      router.push({
+        name: "formpreview",
+        params: {
+          form: JSON.stringify(form),
+        },
+      });
+    }
+
     // 在初始化的时候，获取基本题目类型，基本题目，以及进入的时候弹窗是否使用之前的草稿
     onMounted(() => {
       // 获取基本题目类型，基本题目
       Store.dispatch("getProblemType");
       Store.dispatch("getProblemBasic");
-      // 先判断是否有保存的草稿
-      /* 如果有则弹窗提示是否使用，确定则将数据从仓库中取出，赋值给组件对应参数 */
-      if (Store.state.FORM.draftsForm.title) {
-        ElMessageBox.confirm("检测你有保存的草稿，是否使用?", {
-          confirmButtonText: "使用",
-          cancelButtonText: "不使用",
-        })
-          .then(() => {
-            form.title = Store.state.FORM.draftsForm.title;
-            form.subTitle = Store.state.FORM.draftsForm.subTitle;
-            form.problems = Store.state.FORM.draftsForm.problems;
+      if (routeForm.value) {
+        form.title = routeForm.value.title;
+        form.subTitle = routeForm.value.subTitle;
+        form.problems = routeForm.value.problems;
+      } else {
+        // 先判断是否有保存的草稿
+        /* 如果有则弹窗提示是否使用，确定则将数据从仓库中取出，赋值给组件对应参数 */
+        if (
+          Store.state.FORM.draftsForm.title ||
+          Store.state.FORM.draftsForm.subTitle ||
+          Store.state.FORM.draftsForm.problems
+        ) {
+          ElMessageBox.confirm("检测你有保存的草稿，是否使用?", {
+            confirmButtonText: "使用",
+            cancelButtonText: "不使用",
           })
-          .catch(() => {
-            ElMessage("未使用草稿");
-          });
+            .then(() => {
+              console.log(111);
+              form.title = Store.state.FORM.draftsForm.title;
+              form.subTitle = Store.state.FORM.draftsForm.subTitle;
+              form.problems = Store.state.FORM.draftsForm.problems;
+            })
+            .catch(() => {
+              ElMessage("未使用草稿");
+            });
+        }
       }
     });
 
@@ -272,6 +307,7 @@ export default defineComponent({
       createForm,
       ...toRefs(form),
       saveDraftForm,
+      toPreview,
     };
   },
 });

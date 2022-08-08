@@ -40,40 +40,42 @@
 <script lang="ts">
 import { reactive, toRefs } from "@vue/reactivity";
 import { LoginData } from "@/type/auth";
-import { reqLogin } from '@/api/auth';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex'
-import {defineComponent} from 'vue'
+import { reqLogin } from "@/api/auth";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
+import { defineComponent } from "vue";
+import { ElMessage } from "element-plus";
 export default defineComponent({
   name: "LoginView",
   setup() {
     const data = reactive(new LoginData());
-    const router = useRouter()
-    const store = useStore()
+    const router = useRouter();
+    const store = useStore();
 
-    async function login(){
-      const res:any = await reqLogin(data.loginData)
-      if(res.stat !== 'ok'){
-        alert('登录失败，请稍后重试')
-      }else{
-        localStorage.setItem('token','VK is Login')
-        store.dispatch("getUserInfo")
-        store.dispatch('getFormList',{
-          offset: 0,  //number类型,可选   第几页
-          limit: 8,   //number类型,可选   一页限制显示多少个        
-        })
-        router.push('/')
+    async function login() {
+      const res: any = await reqLogin(data.loginData);
+      if (res.stat !== "ok") {
+        // alert('登录失败，请稍后重试')
+        ElMessage.error(`登录失败，${res.response.data.msg}`);
+      } else {
+        localStorage.setItem("token", "VK is Login");
+        store.dispatch("getUserInfo");
+        store.dispatch("getFormList", {
+          offset: 0, //number类型,可选   第几页
+          limit: 8, //number类型,可选   一页限制显示多少个
+        });
+        router.push("/");
       }
     }
 
-    function toRegister(){
-      router.push('/register')
+    function toRegister() {
+      router.push("/register");
     }
 
     return {
       ...toRefs(data),
       login,
-      toRegister
+      toRegister,
     };
   },
 });

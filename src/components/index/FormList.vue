@@ -22,7 +22,8 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, reactive, computed } from "vue";
+import { defineComponent, computed } from "vue";
+// 引入收藏表单,取消收藏,开始收集,结束收集,删除表单的接口函数
 import {
   reqStarForm,
   reqCancelStarForm,
@@ -30,15 +31,18 @@ import {
   reqEndForm,
   reqDeleteForm,
 } from "@/api/form";
+// 引入仓库
 import { useStore } from "vuex";
 // 引入element-plus函数
-import { ElMessage, ElMessageBox } from "element-plus";
-import router from "@/router";
+import { ElMessage } from "element-plus";
+// 引入路由
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "FormList",
   props: ["operation", "form", "isStar", "formInfo", "formStarInfo"],
   setup(props) {
     const Store = useStore();
+    const router = useRouter();
 
     const statusComputed = computed(() => {
       switch (props.form.status) {

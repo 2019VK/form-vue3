@@ -23,7 +23,14 @@
       <div class="avatar">
         <div class="avatar-icon">
           <div class="user-avatar" @mouseover="avaCover" @mouseleave="avatar">
-            <img :src="user.avatar?user.avatar:require('./assets/defaultAvatar.png')" class="img-circle" />
+            <img
+              :src="
+                user.avatar
+                  ? user.avatar
+                  : require('./assets/defaultAvatar.png')
+              "
+              class="img-circle"
+            />
             <div class="avatar-mask" v-show="ifAvaCover" @click="openAvaDia">
               <div class="avatar-mask-changed">修改头像</div>
             </div>
@@ -247,6 +254,7 @@ import { useRouter } from "vue-router";
 import { reqLogout } from "@/api/auth";
 import { reqSetInfo, reqChangePwd } from "@/api/user";
 import { ChangeUser } from "@/type/user";
+import { ElMessage } from "element-plus";
 
 export default defineComponent({
   setup() {
@@ -276,7 +284,8 @@ export default defineComponent({
     async function exit() {
       const res: any = await reqLogout();
       if (res.stat !== "ok") {
-        alert("退出失败，请稍后重试");
+        // alert("退出失败，请稍后重试");
+        ElMessage.error("退出失败，请稍后重试");
       } else {
         localStorage.setItem("token", "");
         closeExitDia();
@@ -298,10 +307,15 @@ export default defineComponent({
     async function changePassword() {
       const res: any = await reqChangePwd(User.changePwd);
       if (res.stat !== "ok") {
-        alert(`修改密码失败，${res.response.data.msg}`);
+        // alert(`修改密码失败，${res.response.data.msg}`);
+        ElMessage.error(`修改密码失败，${res.response.data.msg}`);
       } else {
         closePwdDia();
-        alert("密码已修改，请重新登录！");
+        // alert("密码已修改，请重新登录！");
+        ElMessage({
+          message: "密码已修改，请重新登录！",
+          type: "success",
+        });
         // 跳转到登录
         router.push("/login");
       }
@@ -321,7 +335,8 @@ export default defineComponent({
     async function changeNick() {
       const res: any = await reqSetInfo(User.setInfo);
       if (res.stat !== "ok") {
-        alert(`修改昵称失败，${res.response.data.msg}`);
+        // alert(`修改昵称失败，${res.response.data.msg}`);
+        ElMessage.error(`修改昵称失败，${res.response.data.msg}`);
       } else {
         // 关闭弹窗
         closeNickDia();
@@ -362,7 +377,8 @@ export default defineComponent({
           User.setInfo.avatar = reader.result as string;
           const res: any = await reqSetInfo(User.setInfo);
           if (res.stat !== "ok") {
-            alert(`修改头像失败，${res.response.data.msg}`);
+            // alert(`修改头像失败，${res.response.data.msg}`);
+            ElMessage.error(`修改头像失败，${res.response.data.msg}`);
           } else {
             // 关闭弹窗
             closeAvakDia();

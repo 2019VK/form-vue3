@@ -1,5 +1,6 @@
 import { reqGetInfo } from "@/api/user";
 import { User } from "@/type/user";
+import { ElMessage } from 'element-plus'
 
 export default {
   namespace:true,
@@ -28,7 +29,8 @@ export default {
     async getUserInfo(context: any) {
       const res: any = await reqGetInfo();
       if (res.stat !== "ok") {
-        alert("获取用户信息失败");
+        // alert("获取用户信息失败");
+        ElMessage.error('获取用户信息失败')
       } else {
         context.commit("userInfo", res.data.user);
       }

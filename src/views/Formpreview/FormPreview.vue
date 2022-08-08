@@ -1,10 +1,9 @@
 <template>
-  <!-- 顶部返回和头像模块 -->
   <div class="box-header">
     <div class="left-wrap">
-      <div class="headerbtn" @click="goIndex">
+      <div class="headerbtn" @click="toCreate">
         <img src="./assets/goback.png" class="goback" />
-        <span>{{ form.title }}</span>
+        <span>退出预览</span>
       </div>
     </div>
     <AvaNickname></AvaNickname>
@@ -17,82 +16,83 @@
           {{ form.title }}
         </div>
         <div class="Title-index__subtitle">
-          <span style="word-break: break-all">{{ form.subTitle }}</span>
+          <span style="word-break: break-all">
+            {{ form.subTitle }}
+          </span>
         </div>
 
         <div class="problems">
           <problems :isUse="false" :problems="form.problems"></problems>
         </div>
-
       </div>
     </div>
   </main>
 </template>
 <script lang="ts">
 // 引入vue基本函数
-import { defineComponent, computed, provide, reactive } from "vue";
-// 引入vuex仓库
-import { useStore } from "vuex";
+import { defineComponent, computed, provide } from "vue";
 // 引入路由，路由器
 import { useRoute, useRouter } from "vue-router";
-// 引入头像组件
-import AvaNickname from "@/components/index/AvaNickname.vue";
 // 引入题目组件
 import problems from "@/components/problems/problems.vue";
-
+// 引入生成随机id的包
+import { v4 as uuidv4 } from "uuid";
+// 引入输入结果的类型
+import { Result } from '@/type/result'
 export default defineComponent({
-  name: "formFill",
+  name: "formPreview",
   // 注册组件
   components: {
     problems,
-    AvaNickname,
   },
   setup() {
-    // 注册仓库,路由,路由器
-    const Store = useStore();
+    // 注册路由,路由器
     const route = useRoute();
     const router = useRouter();
-    // 定义发送给服务器请求的参数
-    let formFillinfo: any = reactive({
-      formId: "",
-      problems: [],
-    });
-    // 向服务器发请求获取表单信息,成功后将部分数据赋值给formfill
-    Store.dispatch("getForm", route.query.id).then(() => {
-      formFillinfo.formId = Store.state.FORM.form.id;
-      formFillinfo.problems = Store.state.FORM.form.problems;
-    });
-    // 从仓库中获取表单信息
+    // 从params参数中取值
+    /* 由于在渲染的过程中要用选项的id
+     * 遍历给每一个选项加上一个id
+     */
     const form = computed(() => {
-      return Store.state.FORM.form;
-    });
-    // 返回首页函数
-    function goIndex() {
-      router.push("/");
-    }
-    // 定义结果的类型
-    type Result =
-      | string
-      | number
-      | {
-          id: string;
-          title: string;
+      if (route.params.form) {
+        let formTemp = JSON.parse(route.params.form as string);
+        for (const item of formTemp.problems) {
+          if (item.type.indexOf("Select") != -1) {
+            item.setting.options;
+            for (const opt of item.setting.options) {
+              opt.id = createId();
+            }
+          }
         }
-      | {
-          id: string;
-          title: string;
-        }[];
-    // 定义一个函数用来爷孙组件通信,通过provide提供给后代组件
+        return formTemp;
+      } else {
+        return null;
+      }
+    });
+    // 创建随机id的函数
+    function createId() {
+      return uuidv4();
+    }
+
+    // 定义一个函数用来爷孙组件通信(空的是为了消除警告)
     function receiveResult(index: number, result: Result) {
-      formFillinfo.problems[index].result = result;
+      // formFillinfo.problems[index].result = result;
     }
     // 提供给后代组件
     provide("receiveResult", receiveResult);
-    
+
+    function toCreate() {
+      router.push({
+        name: "createform",
+        params: {
+          form: route.params.form,
+        },
+      });
+    }
+
     return {
       form,
-      goIndex,
-      formFillinfo,
+      toCreate,
     };
   },
 });
