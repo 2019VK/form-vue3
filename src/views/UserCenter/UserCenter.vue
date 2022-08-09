@@ -340,6 +340,10 @@ export default defineComponent({
       } else {
         // 关闭弹窗
         closeNickDia();
+        ElMessage({
+          message:'修改成功',
+          type:'success'
+        })
         // 更新页面
         updateInfo();
       }
